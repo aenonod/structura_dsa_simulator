@@ -1,12 +1,20 @@
+import tkinter as tk
 from tkinter import *
 
-window = Tk()
-window.geometry("1920x1080")
-window.title("Structura")
+class TreeGUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.geometry("1920x1080")
+        self.title("Structura")
 
-bg_image = PhotoImage(file="binary_tree/background.png")
+        self.setup_background()
 
-bg_label = Label(window, image=bg_image)
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+    def setup_background(self):
+        self.bg_image = PhotoImage(file="binary_tree/background.png")
+        bg_label = Label(self, image=self.bg_image)
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-window.mainloop()
+
+if __name__ == "__main__":
+    app = TreeGUI()
+    app.mainloop()
