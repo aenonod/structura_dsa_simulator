@@ -62,6 +62,13 @@ class TreeGUI(tk.Tk):
                                 fg="#000000", bg="#FFFFFF")
         self.values_input.grid(row=0, column=1, padx=10, sticky="e")
 
+        self.tip_label = tk.Label(self,
+                                text="", font=("Montserrat", 12),
+                                bg="black",
+                                fg="white")
+        self.tip_label.place(relx=0.993, rely=0.152, width=210, anchor="ne")
+        self.tip_label.config(text="Tip: type n/a to skip a node.")
+
     def generate_tree_button(self):
         self.generate_frame = tk.Frame(self, bg="#fcf6d9",
                                      bd = 8, relief = "solid")
