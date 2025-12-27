@@ -31,7 +31,7 @@ class TreeGUI(tk.Tk):
         self.label_text.pack(padx=10, pady=10)
 
     def setup_height_input(self):
-        self.height_frame = tk.Frame(self, bg="#6e7bb2",
+        self.height_frame = tk.Label(self, bg="#6e7bb2",
                                      bd = 5, relief = "solid")
         self.height_frame.place(relx=0.007, rely=0.09, width=445, height=50, anchor="nw")
 
@@ -70,16 +70,13 @@ class TreeGUI(tk.Tk):
         self.tip_label.config(text="Tip: type n/a to skip a node.")
 
     def generate_tree_button(self):
-        self.generate_frame = tk.Frame(self, bg="#fcf6d9",
-                                     bd = 8, relief = "solid")
-        self.generate_frame.place(relx=0.007, rely=0.01, width=180, height=60, anchor="nw")
-
-        self.generate_label = tk.Label(self.generate_frame, text="Generate Tree",
-                                font=("Montserrat", 15, "bold"),
+        self.tree_btn = tk.Button(self, text="Generate Tree",
+                                font=("Montserrat", 15, "bold"), bd=8,
                                 fg="black",
-                                bg="#fcf6d9")
-        self.generate_label.grid(row=0, column=0, padx=10, pady=7)
-
+                                bg="#fcf6d9",
+                                padx=10, pady=7)
+        self.tree_btn.config(command=lambda: )
+        self.tree_btn.place(relx=0.007, rely=0.01, width=180, height=60, anchor="nw")
 
 if __name__ == "__main__":
     app = TreeGUI()
