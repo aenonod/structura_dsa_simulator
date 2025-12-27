@@ -7,7 +7,7 @@ class TreeGUI(tk.Tk):
         self.title("Structura")
         self.attributes("-fullscreen", True)
         self.bind("<Escape>", lambda e: self.attributes("-fullscreen", False))
-
+        
         self.setup_background()
         self.setup_prog_label()
         self.setup_height_input()
@@ -79,8 +79,3 @@ class TreeGUI(tk.Tk):
                                 fg="black",
                                 bg="#fcf6d9")
         self.generate_label.grid(row=0, column=0, padx=10, pady=7)
-
-
-if __name__ == "__main__":
-    app = TreeGUI()
-    app.mainloop()
