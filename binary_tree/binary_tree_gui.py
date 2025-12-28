@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import messagebox
+from binary_tree_program import BinaryTree
 
 class TreeGUI(tk.Tk):
     def __init__(self):
@@ -8,11 +10,15 @@ class TreeGUI(tk.Tk):
         self.attributes("-fullscreen", True)
         self.bind("<Escape>", lambda e: self.attributes("-fullscreen", False))
 
+        self.tree = BinaryTree()
+        self.values = []
+
         self.setup_background()
         self.setup_prog_label()
         self.setup_height_input()
         self.setup_values_input()
         self.generate_tree_button()
+        self.setup_canvas()
 
     def setup_background(self):
         self.bg_image = PhotoImage(file="binary_tree/background.png")
@@ -75,8 +81,54 @@ class TreeGUI(tk.Tk):
                                 fg="black",
                                 bg="#fcf6d9",
                                 padx=10, pady=7)
-        self.tree_btn.config(command=lambda: )
+        self.tree_btn.config(command=lambda: self.generate_tree())
         self.tree_btn.place(relx=0.007, rely=0.01, width=180, height=60, anchor="nw")
+
+    def setup_canvas(self):
+        self.canvas = tk.Canvas(self,
+                    bg="",
+                    highlightthickness=0)
+        self.canvas.place(relx=0.5, rely=0.55, anchor="center", relwidth=1, relheight=0.8)
+
+    def draw_tree(self, node, x, y, dx):
+        if not node:
+            return
+
+        r = 20
+        self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue")
+        self.canvas.create_text(x, y, text=str(node.value), font=("Montserrat", 10, "bold"))
+
+        if node.left:
+            self.canvas.create_line(x, y+r, x-dx, y+80-r)
+            self.draw_tree(node.left, x-dx, y+80, dx//2)
+
+        if node.right:
+            self.canvas.create_line(x, y+r, x+dx, y+80-r)
+            self.draw_tree(node.right, x+dx, y+80, dx//2)
+
+    def generate_tree(self):
+        self.canvas.delete("all")
+
+        height_str = self.height_input.get()
+        try:
+            self.height_int = int(height_str)
+            if not (2 <= self.height_int <= 5):
+                messagebox.showerror("Error", "Input must be an integer between 2-5.")
+                return
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid integer.")
+            return
+
+        values = [v.strip() for v in self.values_input.get().split(",")]
+        try:
+            self.tree.build_bt(self.height_int, values)
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+            return
+        
+        if self.tree.root:
+            self.draw_tree(self.tree.root, 960, 100, 400)
+
 
 if __name__ == "__main__":
     app = TreeGUI()
