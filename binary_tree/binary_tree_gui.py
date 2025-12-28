@@ -19,7 +19,6 @@ class TreeGUI(tk.Tk):
         self.bind("<Configure>", self.resize_bg)
         
         self.tree = BinaryTree()
-        self.resize_bg
         self.setup_prog_label()
         self.setup_height_input()
         self.setup_values_input()
@@ -91,16 +90,16 @@ class TreeGUI(tk.Tk):
         if not node:
             return
 
-        r = 20
+        r = 28
         self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue", tags=("tree",))
-        self.canvas.create_text(x, y, text=str(node.value), font=("Montserrat", 10, "bold"), tags=("tree",))
+        self.canvas.create_text(x, y, text=str(node.data), font=("Montserrat", 13, "bold"), tags=("tree",))
 
         if node.left:
-            self.canvas.create_line(x, y+r, x-dx, y+80-r)
+            self.canvas.create_line(x, y+r, x-dx, y+100-r, width=3)
             self.draw_tree(node.left, x-dx, y+80, dx//2)
 
         if node.right:
-            self.canvas.create_line(x, y+r, x+dx, y+80-r)
+            self.canvas.create_line(x, y+r, x+dx, y+100-r, width=3)
             self.draw_tree(node.right, x+dx, y+80, dx//2)
 
     def generate_tree(self):
@@ -115,13 +114,17 @@ class TreeGUI(tk.Tk):
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid integer.")
             return
-
+        
         self.max_nodes = (2 ** self.height_int) - 1
         self.values = [val.strip() for val in self.values_input.get().split(",")]
+        self.tree.build_bt(self.height_int, self.values)
 
         if len(self.values) != self.max_nodes:
             messagebox.showerror("Error", f"Please enter exactly {self.max_nodes} values (comma-separated).")
             return
+        
+        if self.tree.root:
+            self.draw_tree(self.tree.root, 780, 200, 360)
 
 
 if __name__ == "__main__":
