@@ -10,20 +10,23 @@ class TreeGUI(tk.Tk):
         self.attributes("-fullscreen", True)
         self.bind("<Escape>", lambda e: self.attributes("-fullscreen", False))
 
-        self.tree = BinaryTree()
-        self.values = []
+        self.canvas = tk.Canvas(self, highlightthickness=0)
+        self.canvas.pack(fill="both", expand=True)
 
-        self.setup_background()
+        self.bg_image = tk.PhotoImage(file="binary_tree/background.png")
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+
+        self.bind("<Configure>", self.resize_bg)
+        
+        self.tree = BinaryTree()
+        self.resize_bg
         self.setup_prog_label()
         self.setup_height_input()
         self.setup_values_input()
         self.generate_tree_button()
-        self.setup_canvas()
 
-    def setup_background(self):
-        self.bg_image = PhotoImage(file="binary_tree/background.png")
-        bg_label = Label(self, image=self.bg_image)
-        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+    def resize_bg(self, event):
+        self.canvas.coords(self.bg_id, 0, 0)
 
     def setup_prog_label(self):
         self.label_frame = Frame(self, bg = "#6e7bb2",
@@ -84,19 +87,13 @@ class TreeGUI(tk.Tk):
         self.tree_btn.config(command=lambda: self.generate_tree())
         self.tree_btn.place(relx=0.007, rely=0.01, width=180, height=60, anchor="nw")
 
-    def setup_canvas(self):
-        self.canvas = tk.Canvas(self,
-                    bg="",
-                    highlightthickness=0)
-        self.canvas.place(relx=0.5, rely=0.55, anchor="center", relwidth=1, relheight=0.8)
-
     def draw_tree(self, node, x, y, dx):
         if not node:
             return
 
         r = 20
-        self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue")
-        self.canvas.create_text(x, y, text=str(node.value), font=("Montserrat", 10, "bold"))
+        self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue", tags=("tree",))
+        self.canvas.create_text(x, y, text=str(node.value), font=("Montserrat", 10, "bold"), tags=("tree",))
 
         if node.left:
             self.canvas.create_line(x, y+r, x-dx, y+80-r)
@@ -107,7 +104,7 @@ class TreeGUI(tk.Tk):
             self.draw_tree(node.right, x+dx, y+80, dx//2)
 
     def generate_tree(self):
-        self.canvas.delete("all")
+        self.canvas.delete("tree")
 
         height_str = self.height_input.get()
         try:
@@ -119,15 +116,12 @@ class TreeGUI(tk.Tk):
             messagebox.showerror("Error", "Please enter a valid integer.")
             return
 
-        values = [v.strip() for v in self.values_input.get().split(",")]
-        try:
-            self.tree.build_bt(self.height_int, values)
-        except ValueError as e:
-            messagebox.showerror("Error", str(e))
+        self.max_nodes = (2 ** self.height_int) - 1
+        self.values = [val.strip() for val in self.values_input.get().split(",")]
+
+        if len(self.values) != self.max_nodes:
+            messagebox.showerror("Error", f"Please enter exactly {self.max_nodes} values (comma-separated).")
             return
-        
-        if self.tree.root:
-            self.draw_tree(self.tree.root, 960, 100, 400)
 
 
 if __name__ == "__main__":
