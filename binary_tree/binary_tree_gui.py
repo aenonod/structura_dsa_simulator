@@ -83,7 +83,7 @@ class TreeGUI(tk.Tk):
         self.tree_btn = tk.Button(self, text="Generate Tree",
                                 font=("Montserrat", 15, "bold"), bd=8,
                                 fg="black",
-                                bg="#fcf6d9",
+                                bg="#b3d9ff",
                                 padx=10, pady=7)
         self.tree_btn.config(command=lambda: self.generate_tree())
         self.tree_btn.place(relx=0.007, rely=0.01, width=180, height=60, anchor="nw")
@@ -93,7 +93,7 @@ class TreeGUI(tk.Tk):
             return
 
         r = 28
-        self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue", tags=("tree",))
+        self.canvas.create_oval(x-r, y-r, x+r, y+r, fill="lightblue", outline="black", tags=("tree",))
         self.canvas.create_text(x, y, text=str(node.data), font=("Montserrat", 13, "bold"), tags=("tree",))
 
         if node.left:
@@ -131,14 +131,14 @@ class TreeGUI(tk.Tk):
         self.traversal()
 
     def traversal_frame(self):
-        self.traversal_frame = tk.Frame(self, bg="white",
+        self.traversal_frame = tk.Frame(self, bg="#b3d9ff",
                                 bd = 5, relief = "solid")
         self.traversal_frame.place(relx=0.007, rely=0.99, width=1350, height=130, anchor="sw")
 
         self.traversal_label = tk.Label(self.traversal_frame, text="Inorder:\nPreorder:\nPostorder: ",
                                 font=("Montserrat", 15, "bold"),
                                 fg="black",
-                                bg="white",
+                                bg="#b3d9ff",
                                 justify="left", anchor="w")
         self.traversal_label.pack(padx=20, pady=20, fill="both")
 
