@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-from binary_tree_program import Node
 from binary_tree_program import BinaryTree
 
 class TreeGUI(tk.Tk):
