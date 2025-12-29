@@ -91,9 +91,10 @@ class BST(tk.Tk):
 
 #18
     def back_button(self):
-        self.display_canvas_bst.delete("all")  
+         
         self.bst_frame.place_forget()
         self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
+        self.binary_frame.place(relx=0.993, rely=0.01, width=450, height=60, anchor="ne")
 #2
     def confirm_input(self):
         raw_number_value = self.entry_user.get()
@@ -121,10 +122,11 @@ class BST(tk.Tk):
             #6
             self.display_bg.itemconfigure(self.number_limit_text, state="hidden")
             self.input_frame.place_forget()
+            self.binary_frame.place_forget()
             self.bst_frame.place(x= 0,y= 0)
 
             
-            self.draw_bst(root,960,150,400)
+            self.draw_bst(root,780, 200, 360)
 
         except:
             self.error_label.config(text="INVALID")
@@ -151,52 +153,52 @@ class BST(tk.Tk):
 
 #1
     def display_get_user_input_frame(self):
-        self.input_frame = Frame(self, bg = "#a3afe0", width=1100, height=416, bd = 4, relief = "solid")
+        self.input_frame = Frame(self, bg = "#a3afe0", width=1000, height=300, bd = 4, relief = "solid")
         self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.number_label = Label(self.input_frame,text="Enter any random number:",font=("Press Start 2P", 32, "bold"), fg = "black",bg="#a3afe0")
-        self.number_label.place(relx=0.5, rely=0.2, anchor="center")
+        self.number_label = Label(self.input_frame,text="Enter any random number:",font=("Press Start 2P", 20, "bold"), fg = "black",bg="#a3afe0")
+        self.number_label.place(relx=0.5, rely=0.11, anchor="center")
 
         self.entry_user = Entry(self.input_frame, font=("Press Start 2P",20), bd= 4, relief = "solid", justify = "left")
-        self.entry_user.place(relx=0.5, rely=0.48, anchor="center", width=1000, height=78)
+        self.entry_user.place(relx=0.5, rely=0.35, anchor="center", width=900, height=60)
         self.entry_user.bind("<Key>", lambda event: self.error_label.config(text=""))
         self.entry_user.bind("<KeyRelease>", lambda e: self.display_count())
     #1
-        self.button_confirm = Button(self.input_frame, text = "Confirm", font = ("Press Start 2P",24), fg = "white", bg = "#17357a", bd = 4, relief = "solid", command = self.confirm_input)
-        self.button_confirm.place(relx=0.5, rely=0.85, anchor="center", width=508.7, height=77.4)
+        self.button_confirm = Button(self.input_frame, text = "Confirm", font = ("Press Start 2P",20), fg = "white", bg = "#17357a", bd = 4, relief = "solid", command = self.confirm_input)
+        self.button_confirm.place(relx=0.5, rely=0.85, anchor="center", width=400, height=60)
 
-        self.number_limit_text = self.display_bg.create_text(960,int(1080 * 0.72), text="Input must be minimum of 10, maximum of 30",font=("Press Start 2P", 15, "bold"),fill="#fdacac")
+        self.number_limit_text = self.display_bg.create_text(765,int(1080 * 0.62), text="Input must be minimum of 10, maximum of 30",font=("Press Start 2P", 15, "bold"),fill="#fdacac")
 
 
     
 
 #13 display the number count when inputting number
-        self.number_count = Label(self.input_frame, text = "Number count:", font = ("Press Start 2P", 23), fg = "black",bg = "#a3afe0")
-        self.number_count.place(relx= 0.227,rely= 0.67, anchor = "center")
+        self.number_count = Label(self.input_frame, text = "Number count:", font = ("Press Start 2P", 20), fg = "black",bg = "#a3afe0")
+        self.number_count.place(relx= 0.223,rely= 0.55, anchor = "center")
 
-        self.number_count_display = Entry(self.input_frame, font = ("Press Start 2P", 23), relief = "flat", bg="#a3afe0")
-        self.number_count_display.place(relx= 0.49, rely= 0.67, width= 156, height= 52, anchor = "center")
+        self.number_count_display = Entry(self.input_frame, font = ("Press Start 2P", 20), relief = "flat", bg="#a3afe0")
+        self.number_count_display.place(relx= 0.49, rely= 0.55, width= 156, height= 52, anchor = "center")
         
 #3
-        self.error_label = Label(self.input_frame, text="", font=("Press Start 2P", 23), fg="red", bg="#a3afe0")
-        self.error_label.place(relx=0.86, rely=0.67, anchor="center")
+        self.error_label = Label(self.input_frame, text="", font=("Press Start 2P", 20), fg="red", bg="#a3afe0")
+        self.error_label.place(relx=0.86, rely=0.55, anchor="center")
 
 #1 
     def binary_search_tree_frame(self):
-        self.binary_frame = Frame(self, bg = "#6e7bb2", width=660, height=81, bd = 10, relief = "solid")
-        self.binary_frame.place(relx=0.62, rely=0.046)
+        self.binary_frame = Frame(self, bg = "#6e7bb2", bd = 8, relief = "solid")
+        self.binary_frame.place(relx=0.993, rely=0.01, width=450, height=60, anchor="ne")
 
-        self.label_binary_text = Label(self.binary_frame,text="Binary Search Tree",font=("Press Start 2P", 24, "bold"), fg = "white",bg="#6e7bb2")
-        self.label_binary_text.place(relx=0.5, rely=0.5, anchor="center")
+        self.label_binary_text = Label(self.binary_frame,text="Binary Search Tree",font=("Press Start 2P", 15, "bold"), fg = "white",bg="#6e7bb2")
+        self.label_binary_text.pack(padx=10, pady=10)
 
     #16
     def display_input_back_button(self):
-        self.input_back_button = Button(self, text = "Back",font = ("Press Start 2P", 20, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid")
-        self.input_back_button.place(relx= 0.891, rely= 0.9)
+        self.input_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid",padx=10, pady=7)
+        self.input_back_button.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
     def display_bst_back_button(self):
-        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 20, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid", command = self.back_button)
-        self.bst_back_button.place(relx= 0.891, rely= 0.9)
+        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid",padx=10, pady=7, command = self.back_button)
+        self.bst_back_button.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 #4
     def display_binary_search_tree(self):
         self.bst_frame = Frame(self, width=1920, height=1080)
@@ -207,12 +209,12 @@ class BST(tk.Tk):
         
         self.display_canvas_bst.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        self.bst_title_frame = Frame(self.display_canvas_bst, bg = "#6e7bb2", width=650, height=81, bd = 10, relief = "solid")
+        self.bst_title_frame = Frame(self.display_canvas_bst, bg = "#6e7bb2", width=450, height=60, bd = 8, relief = "solid")
         
-        self.bst_title = Label(self.bst_title_frame,text="Binary Search Tree",font=("Press Start 2P", 23, "bold"), fg = "white",bg="#6e7bb2")
-        self.bst_title.place(relx=0.5, rely=0.5, anchor = "center")
+        self.bst_title = Label(self.bst_title_frame,text="Binary Search Tree",font=("Press Start 2P", 15, "bold"), fg = "white",bg="#6e7bb2")
+        self.bst_title.pack(padx=25, pady=9)
 
-        self.display_canvas_bst.create_window(1200, 50,anchor="nw",window = self.bst_title_frame)
+        self.display_canvas_bst.create_window(1075, 10,anchor="nw",window = self.bst_title_frame)
 
 if __name__ == "__main__":
     app = BST()
