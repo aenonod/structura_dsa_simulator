@@ -89,6 +89,11 @@ class BST(tk.Tk):
         self.number_count_display.delete(0, END)
         self.number_count_display.insert(0, total_count)
 
+#18
+    def back_button(self):
+        self.display_canvas_bst.delete("all")  
+        self.bst_frame.place_forget()
+        self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
 #2
     def confirm_input(self):
         raw_number_value = self.entry_user.get()
@@ -190,7 +195,7 @@ class BST(tk.Tk):
         self.input_back_button.place(relx= 0.891, rely= 0.9)
 
     def display_bst_back_button(self):
-        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 20, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid")
+        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 20, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid", command = self.back_button)
         self.bst_back_button.place(relx= 0.891, rely= 0.9)
 #4
     def display_binary_search_tree(self):
