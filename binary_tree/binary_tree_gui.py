@@ -23,6 +23,8 @@ class TreeGUI(tk.Tk):
         self.setup_height_input()
         self.setup_values_input()
         self.generate_tree_button()
+        self.traversal_frame()
+        self.back_button()
 
     def resize_bg(self, event):
         self.canvas.coords(self.bg_id, 0, 0)
@@ -125,6 +127,37 @@ class TreeGUI(tk.Tk):
         
         if self.tree.root:
             self.draw_tree(self.tree.root, 780, 200, 360)
+
+        self.traversal()
+
+    def traversal_frame(self):
+        self.traversal_frame = tk.Frame(self, bg="white",
+                                bd = 5, relief = "solid")
+        self.traversal_frame.place(relx=0.007, rely=0.99, width=1350, height=130, anchor="sw")
+
+        self.traversal_label = tk.Label(self.traversal_frame, text="Inorder:\nPreorder:\nPostorder: ",
+                                font=("Montserrat", 15, "bold"),
+                                fg="black",
+                                bg="white",
+                                justify="left", anchor="w")
+        self.traversal_label.pack(padx=20, pady=20, fill="both")
+
+    def traversal(self):
+        inorder = "  ".join(map(str, self.tree.get_inorder()))
+        preorder = "  ".join(map(str, self.tree.get_preorder()))
+        postorder = "  ".join(map(str, self.tree.get_postorder()))
+
+        text = f"Inorder: {inorder}\nPreorder: {preorder}\nPostorder: {postorder}"
+        self.traversal_label.config(text=text)
+
+    def back_button(self):
+        self.back_btn = tk.Button(self, text="Back",
+                                font=("Press Start 2P", 15, "bold"), bd=8,
+                                fg="white",
+                                bg="#17357a",
+                                padx=10, pady=7)
+        self.back_btn.config(command=lambda: self.main_menu())
+        self.back_btn.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
 
 if __name__ == "__main__":
