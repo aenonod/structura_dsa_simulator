@@ -147,7 +147,7 @@ class BST(tk.Tk):
         self.display_bg = Canvas(self, width=1920, height=1080, highlightthickness=0)
         self.display_bg.place(x=0, y=0)
 
-        self.bg_image = PhotoImage(file="binary_search_tree/background.png")
+        self.bg_image = PhotoImage(file="assets/background.png")
 
         self.display_bg.create_image(0, 0, image=self.bg_image, anchor="nw")
 
