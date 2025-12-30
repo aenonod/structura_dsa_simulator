@@ -37,7 +37,7 @@ class TowerOfHanoi:
         self.canvas.pack(fill="both", expand=True)
 
         # load and display background image
-        self.bg_img_orig = Image.open("recursion/background.png")                                                                    
+        self.bg_img_orig = Image.open("assets/background.png")                                                                    
         self.bg_image = ImageTk.PhotoImage(self.bg_img_orig)                                                               
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)
         # title Banner

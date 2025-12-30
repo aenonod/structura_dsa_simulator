@@ -13,7 +13,7 @@ class TreeGUI(tk.Tk):
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        self.bg_image = tk.PhotoImage(file="binary_tree/background.png")
+        self.bg_image = tk.PhotoImage(file="assets/background.png")
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
 
         self.bind("<Configure>", self.resize_bg)
