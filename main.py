@@ -45,6 +45,8 @@ class ProgramGUI(tk.Tk):
             self.canvas.coords(self.recursion_btn_id, width * 0.50, height * 0.82)
         if hasattr(self, "back_btn_id"):
             self.canvas.coords(self.back_btn_id, width * 0.15, height * 0.92)
+        if hasattr(self, "devs_btn_id"):
+            self.canvas.coords(self.devs_btn_id, width * 0.85, height * 0.92)
 
     def force_redraw(self):
         w = self.canvas.winfo_width()
@@ -90,6 +92,7 @@ class ProgramGUI(tk.Tk):
         self.create_bst_button()
         self.create_recursion_button()
         self.create_back_button()
+        self.create_devs_button()
         self.force_redraw()
 
     def create_stack_button(self):
@@ -199,6 +202,24 @@ class ProgramGUI(tk.Tk):
         
         self.back_btn.pack(ipadx=50, ipady=50)
         self.back_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.back_btn)
+
+    def create_devs_button(self):
+        self.devs_btn = tk.Button(self.canvas,
+            text="MEET THE DEVS",
+            font=("Press Start 2P", 15, "bold"),
+            fg="white",
+            bg="#17357a",
+            activebackground="#1f4bb3",
+            relief="solid",
+            bd=6,
+            padx=10,
+            pady=3.5,
+            width=15,
+            height=1, 
+            command=self.welcome_page)
+        
+        self.devs_btn.pack(ipadx=50, ipady=50)
+        self.devs_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.devs_btn)
 
 if __name__ == "__main__":
     app = ProgramGUI()
