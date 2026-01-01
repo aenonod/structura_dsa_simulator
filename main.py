@@ -43,6 +43,8 @@ class ProgramGUI(tk.Tk):
             self.canvas.coords(self.bst_btn_id, width * 0.50, height * 0.74)
         if hasattr(self, "recursion_btn_id"):
             self.canvas.coords(self.recursion_btn_id, width * 0.50, height * 0.82)
+        if hasattr(self, "back_btn_id"):
+            self.canvas.coords(self.back_btn_id, width * 0.15, height * 0.92)
 
     def force_redraw(self):
         w = self.canvas.winfo_width()
@@ -87,6 +89,7 @@ class ProgramGUI(tk.Tk):
         self.create_bt_button()
         self.create_bst_button()
         self.create_recursion_button()
+        self.create_back_button()
         self.force_redraw()
 
     def create_stack_button(self):
@@ -178,6 +181,24 @@ class ProgramGUI(tk.Tk):
         
         self.recursion_btn.pack(ipadx=50, ipady=50)
         self.recursion_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.recursion_btn)
+
+    def create_back_button(self):
+        self.back_btn = tk.Button(self.canvas,
+            text="BACK",
+            font=("Press Start 2P", 15, "bold"),
+            fg="white",
+            bg="#17357a",
+            activebackground="#1f4bb3",
+            relief="solid",
+            bd=6,
+            padx=10,
+            pady=3.5,
+            width=15,
+            height=1, 
+            command=self.welcome_page)
+        
+        self.back_btn.pack(ipadx=50, ipady=50)
+        self.back_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.back_btn)
 
 if __name__ == "__main__":
     app = ProgramGUI()
