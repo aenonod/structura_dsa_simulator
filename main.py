@@ -35,6 +35,8 @@ class ProgramGUI(tk.Tk):
             self.canvas.coords(self.play_btn_id, width * 0.50, height * 0.64)
         if hasattr(self, "stack_btn_id"):
             self.canvas.coords(self.stack_btn_id, width * 0.50, height * 0.50)
+        if hasattr(self, "queue_btn_id"):
+            self.canvas.coords(self.queue_btn_id, width * 0.50, height * 0.58)
 
     def force_redraw(self):
         w = self.canvas.winfo_width()
@@ -75,6 +77,7 @@ class ProgramGUI(tk.Tk):
         self.bg_img = None
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw")
         self.create_stack_button()
+        self.create_queue_button()
         self.force_redraw()
 
     def create_stack_button(self):
@@ -87,13 +90,31 @@ class ProgramGUI(tk.Tk):
             relief="solid",
             bd=6,
             padx=10,
-            pady=1,
+            pady=3.5,
             width=20,
             height=1, 
             command=self.main_menu)
         
         self.stack_btn.pack(ipadx=50, ipady=50)
         self.stack_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.stack_btn)
+
+    def create_queue_button(self):
+        self.queue_btn = tk.Button(self.canvas,
+            text="QUEUE",
+            font=("Press Start 2P", 18, "bold"),
+            fg="white",
+            bg="#6e7bb2",
+            activebackground="#1f4bb3",
+            relief="solid",
+            bd=6,
+            padx=10,
+            pady=3.5,
+            width=20,
+            height=1, 
+            command=self.main_menu)
+        
+        self.queue_btn.pack(ipadx=50, ipady=50)
+        self.queue_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.queue_btn)
 
 if __name__ == "__main__":
     app = ProgramGUI()
