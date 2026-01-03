@@ -193,11 +193,11 @@ class BST(tk.Tk):
 
     #16
     def display_input_back_button(self):
-        self.input_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid",padx=10, pady=7)
+        self.input_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 8,padx=10, pady=7)
         self.input_back_button.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
     def display_bst_back_button(self):
-        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 4, relief = "solid",padx=10, pady=7, command = self.back_button)
+        self.bst_back_button = Button(self, text = "Back",font = ("Press Start 2P", 15, "bold"), fg = "white", bg ="#17357a", bd = 8,padx=10, pady=7, command = self.back_button)
         self.bst_back_button.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 #4
     def display_binary_search_tree(self):
