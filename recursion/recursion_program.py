@@ -41,28 +41,31 @@ class TowerOfHanoi:
         self.bg_image = ImageTk.PhotoImage(self.bg_img_orig)                                                               
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)
         # title Banner
-        self.title_bg = self.canvas.create_rectangle(0, 0, 0, 0, fill="#6e7bb2", outline="black", width=3)
-        self.title_text = self.canvas.create_text(0, 0, text="Recursion – Tower of Hanoi", fill="white", font=("Press Start 2P", 8, "bold"))                   
+        self.title_bg = self.canvas.create_rectangle(0, 0, 0, 0, fill="#6e7bb2", outline="black", width=8)
+        self.title_text = self.canvas.create_text(0, 0, text="Recursion", fill="white", font=("Press Start 2P", 15, "bold"))                   
 
         # bind window resize event
         self.canvas.bind("<Configure>", self.on_resize) 
                                                         
         # initialize move counter
         self.moves = 0                                                                                                     
-        self.move_label = tk.Label(root, text="Moves: 0", font=("Press Start 2P", 14, "bold"), fg="white", bg= "#17357a")                              
+        self.move_label = tk.Label(root, text="Moves: 0", font=("Press Start 2P", 12, "bold"), fg="white", bg= "#17357a",padx=10, pady=7, bd = 6, relief = "ridge")                              
         self.move_label.place(relx=0.5, rely=0.02, anchor="n")
 
         # create Start button
-        self.start_button = tk.Button(self.canvas, text="Start Hanoi", font=("Press Start 2P", 16, "bold"), fg="white", bg= "#17357a", command=self.start_hanoi)              
-                                                             
-        self.start_button.place(relx=0.5, rely=0.95, anchor="center")
-        self.pause_button = tk.Button(
-        self.canvas, text="Pause", font=("Press Start 2P", 14, "bold"), command=self.toggle_pause, fg="white", bg= "#17357a")
-        self.pause_button.place(relx=0.10, rely=.95, anchor="center")
+        self.start_button = tk.Button(self.canvas, text="Start Hanoi", font=("Press Start 2P", 15, "bold"), fg="white", bg= "#17357a", bd= 6, relief = "raised", padx=10, pady=7, command=self.start_hanoi)              
+        self.start_button.place(relx=0.5, rely=0.96, anchor="center")
+
+        #para naka disable muna sa simula
+        self.start_button.config(state="disabled")
+
+
+        self.pause_button = tk.Button(self.canvas, text="Pause", font=("Press Start 2P", 15, "bold"), command=self.toggle_pause, fg="white", bg= "#17357a", bd= 6, relief = "raised",padx=10, pady=7)
+        self.pause_button.place(relx=0.006, rely=0.99, width=150, height=50, anchor="sw")
         
         # create Back button
-        self.back_button = tk.Button(self.canvas, text="Back", font=("Press Start 2P", 16, "bold"), fg="white", bg="#17357a", command=self.go_back)
-        self.back_button.place(relx=0.9, rely=0.95, anchor="center")
+        self.back_button = tk.Button(self.canvas, text="Back", font=("Press Start 2P", 15, "bold"), fg="white", bg="#17357a", bd= 6, relief = "raised", padx=10, pady=7, command=self.go_back)
+        self.back_button.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
         # create popup window for disk input
         self.create_popup()
@@ -114,11 +117,11 @@ class TowerOfHanoi:
             self.draw_disks()
 
         # position title at upper-right
-        padding = 20
+        padding = 10
         box_width = 330
         box_height = 45
 
-        x2 = event.width - padding
+        x2 = event.width - 15
         y1 = padding
         x1 = x2 - box_width
         y2 = y1 + box_height
@@ -131,16 +134,16 @@ class TowerOfHanoi:
 
    # create popup window for disk input
     def create_popup(self):
-        self.popup_frame = tk.Frame(self.canvas, bg="#a3afe0", bd=2, relief="ridge")
-        self.popup_frame.place(relx=0.5, rely=0.5, anchor="center")
+        self.popup_frame = tk.Frame(self.canvas,bg="#a3afe0", bd=4, relief="solid")
+        self.popup_frame.place(relx=0.5, rely=0.47, width = 900,height = 200, anchor="center")
 
         # display prompt text
-        tk.Label(self.popup_frame, text="Number of disks?", font=("Press Start 2P", 14, "bold"), bg="#a3afe0").pack(padx=15, pady=10)
+        tk.Label(self.popup_frame, text="Number of disks?", font=("Press Start 2P", 20, "bold"), bg="#a3afe0").pack(padx=15, pady=10)
 
         # input field for number of disks
-        self.disk_entry = tk.Entry(self.popup_frame, width=5, font=("Press Start 2P", 14))
-        self.disk_entry.pack(padx=10, pady=5)
-        tk.Button(self.popup_frame, text="Set", font=("Press Start 2P", 14, "bold"), fg="white", bg= "#17357a", command=self.set_disks).pack(pady=10)
+        self.disk_entry = tk.Entry(self.popup_frame, width=5, font=("Press Start 2P", 20),bd= 4, relief = "solid", justify = "center")
+        self.disk_entry.place(relx=0.5, rely=0.43, anchor="center", width=400, height=60)
+        tk.Button(self.popup_frame, text="Set", font=("Press Start 2P", 20, "bold"), fg="white", bg= "#17357a", bd = 4,relief = "solid", command=self.set_disks).place( relx=0.5, rely=0.8, anchor="center", width=400, height=60)
 
     # validate and set number of disks
     def set_disks(self):
@@ -291,12 +294,13 @@ class TowerOfHanoi:
         self.pegs = [[], [], []]
         self.canvas.delete("peg")
         self.canvas.delete("disk")
-        self.popup_frame.place(relx=0.5, rely=0.5, anchor="center")
+        self.popup_frame.place(relx=0.5,rely=0.47,width=900,height=200,anchor="center")
         self.start_button.config(state="disabled")
 
 # main program
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("800x600")
+    root.attributes("-fullscreen", True)
+    root.bind("<Escape>", lambda e: root.attributes("-fullscreen", False))
     app = TowerOfHanoi(root)
     root.mainloop()
