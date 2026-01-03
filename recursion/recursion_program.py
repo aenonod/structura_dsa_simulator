@@ -10,7 +10,7 @@ class TowerOfHanoi:
     def __init__(self, root):  
         # initialize main window                                                                                            
         self.root = root
-        self.root.title("Tower of Hanoi") 
+        self.root.title("Structura") 
         # color of disk per size
         self.disk_colors = [
     "#FF595E",  # red
@@ -37,9 +37,9 @@ class TowerOfHanoi:
         self.canvas.pack(fill="both", expand=True)
 
         # load and display background image
-        self.bg_img_orig = Image.open("assets/background.png")                                                                    
-        self.bg_image = ImageTk.PhotoImage(self.bg_img_orig)                                                               
-        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)
+        self.bg_image = tk.PhotoImage(file="assets/background.png")
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+        
         # title Banner
         self.title_bg = self.canvas.create_rectangle(0, 0, 0, 0, fill="#6e7bb2", outline="black", width=8)
         self.title_text = self.canvas.create_text(0, 0, text="Recursion", fill="white", font=("Press Start 2P", 15, "bold"))                   
@@ -58,7 +58,6 @@ class TowerOfHanoi:
 
         #para naka disable muna sa simula
         self.start_button.config(state="disabled")
-
 
         self.pause_button = tk.Button(self.canvas, text="Pause", font=("Press Start 2P", 15, "bold"), command=self.toggle_pause, fg="white", bg= "#17357a", bd= 6, relief = "raised",padx=10, pady=7)
         self.pause_button.place(relx=0.006, rely=0.99, width=150, height=50, anchor="sw")
@@ -105,11 +104,7 @@ class TowerOfHanoi:
 
     # resize background image when window size changes
     def on_resize(self, event):                                                                                            
-        width = event.width
-        height = event.height
-        bg_resized = self.bg_img_orig.resize((width, height), Image.Resampling.LANCZOS)
-        self.bg_image = ImageTk.PhotoImage(bg_resized)
-        self.canvas.itemconfig(self.bg_id, image=self.bg_image)
+        self.canvas.coords(self.bg_id, 0, 0)
 
         # redraw pegs and disks if disks are already set
         if self.num_disks > 0:
@@ -117,9 +112,9 @@ class TowerOfHanoi:
             self.draw_disks()
 
         # position title at upper-right
-        padding = 10
-        box_width = 330
-        box_height = 45
+        padding = 12
+        box_width = 395
+        box_height = 55
 
         x2 = event.width - 15
         y1 = padding
@@ -138,7 +133,7 @@ class TowerOfHanoi:
         self.popup_frame.place(relx=0.5, rely=0.47, width = 900,height = 200, anchor="center")
 
         # display prompt text
-        tk.Label(self.popup_frame, text="Number of disks?", font=("Press Start 2P", 20, "bold"), bg="#a3afe0").pack(padx=15, pady=10)
+        tk.Label(self.popup_frame, text="Enter a number of disks:", font=("Press Start 2P", 20, "bold"), bg="#a3afe0").pack(padx=15, pady=10)
 
         # input field for number of disks
         self.disk_entry = tk.Entry(self.popup_frame, width=5, font=("Press Start 2P", 20),bd= 4, relief = "solid", justify = "center")
