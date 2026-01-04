@@ -26,6 +26,27 @@ class TreeGUI(tk.Tk):
         self.traversal_frame()
         self.back_button()
 
+        self.values_input.bind("<Key>", lambda e: self.error_label.config(text=""))
+        self.values_input.bind("<KeyRelease>", lambda e: self.display_count())
+
+        self.number_count = Label(
+            self.canvas,
+            text="  Number count:                  ",
+            font=("Montserrat", 12),
+            fg="white",
+            bg="black")
+        self.number_count.place(relx=0.977, rely=0.184, anchor="ne")
+
+        self.number_count_display = tk.Entry(
+            self.canvas,
+            font=("Montserrat", 12),
+            relief="flat",
+            fg="white", 
+            bg="black")
+        self.number_count_display.place(relx=0.983, rely=0.198, width=30, height=24, anchor="center")
+
+        self.display_count()
+
     def resize_bg(self, event):
         self.canvas.coords(self.bg_id, 0, 0)
 
@@ -77,7 +98,21 @@ class TreeGUI(tk.Tk):
                                 bg="black",
                                 fg="white")
         self.tip_label.place(relx=0.993, rely=0.152, width=210, anchor="ne")
-        self.tip_label.config(text="Tip: type n/a to skip a node.")
+        self.tip_label.config(text="Tip: type 'n/a' to skip a node.")
+
+    def display_count(self):
+        raw_count = self.values_input.get()
+        valid_inputs = []
+
+        for count in raw_count.split(","):
+            count = count.strip()
+            if count != "":
+                valid_inputs.append(count)
+
+        total_count = len(valid_inputs)
+
+        self.number_count_display.delete(0, END)
+        self.number_count_display.insert(0, total_count)
 
     def generate_tree_button(self):
         self.tree_btn = tk.Button(self, text="Generate Tree",
@@ -97,11 +132,11 @@ class TreeGUI(tk.Tk):
         self.canvas.create_text(x, y, text=str(node.data), font=("Montserrat", 13, "bold"), tags=("tree",))
 
         if node.left:
-            self.canvas.create_line(x, y+r, x-dx, y+100-r, width=3)
+            self.canvas.create_line(x, y+r, x-dx, y+100-r, width=3, tags="tree")
             self.draw_tree(node.left, x-dx, y+80, dx//2)
 
         if node.right:
-            self.canvas.create_line(x, y+r, x+dx, y+100-r, width=3)
+            self.canvas.create_line(x, y+r, x+dx, y+100-r, width=3, tags="tree")
             self.draw_tree(node.right, x+dx, y+80, dx//2)
 
     def generate_tree(self):
@@ -118,12 +153,22 @@ class TreeGUI(tk.Tk):
             return
         
         self.max_nodes = (2 ** self.height_int) - 1
-        self.values = [val.strip() for val in self.values_input.get().split(",")]
-        self.tree.build_bt(self.height_int, self.values)
+        raw_values = self.values_input.get().split(",")
 
-        if len(self.values) != self.max_nodes:
-            messagebox.showerror("Error", f"Please enter exactly {self.max_nodes} values (comma-separated).")
+        if len(raw_values) < self.max_nodes or len(raw_values) > self.max_nodes:
+            messagebox.showerror("Error", f"You must enter exactly {self.max_nodes} values.\n" f"Use 'n/a' for empty nodes.")
             return
+
+        self.values = []
+        for i, val in enumerate(raw_values):
+            val = val.strip()
+            if val == "":
+                messagebox.showerror("Error", f"Invalid input at position {i+1}. Please remove empty or invalid values.")
+                return
+            else:
+                self.values.append(val)
+
+        self.tree.build_bt(self.height_int, self.values)
         
         if self.tree.root:
             self.draw_tree(self.tree.root, 780, 200, 360)
