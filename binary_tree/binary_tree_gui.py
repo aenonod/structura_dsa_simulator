@@ -1,24 +1,20 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-from binary_tree_program import BinaryTree
+from .binary_tree_program import BinaryTree
 
-class TreeGUI(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Structura")
-        self.attributes("-fullscreen", True)
-        self.bind("<Escape>", lambda e: self.attributes("-fullscreen", False))
+class TreeGUI(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
+        self.tree = BinaryTree()
 
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         self.bg_image = tk.PhotoImage(file="assets/background.png")
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
-
-        self.bind("<Configure>", self.resize_bg)
         
-        self.tree = BinaryTree()
         self.setup_prog_label()
         self.setup_height_input()
         self.setup_values_input()
@@ -46,9 +42,6 @@ class TreeGUI(tk.Tk):
         self.number_count_display.place(relx=0.983, rely=0.198, width=30, height=24, anchor="center")
 
         self.display_count()
-
-    def resize_bg(self, event):
-        self.canvas.coords(self.bg_id, 0, 0)
 
     def setup_prog_label(self):
         self.label_frame = Frame(self, bg = "#6e7bb2",
@@ -201,10 +194,9 @@ class TreeGUI(tk.Tk):
                                 fg="white",
                                 bg="#17357a",
                                 padx=10, pady=7)
-        self.back_btn.config(command=lambda: self.main_menu())
+        self.back_btn.config(command=lambda: self.go_back())
         self.back_btn.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
-
-if __name__ == "__main__":
-    app = TreeGUI()
-    app.mainloop()
+    def go_back(self):
+        self.destroy()
+        self.master.main_menu()
