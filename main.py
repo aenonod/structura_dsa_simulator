@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from binary_tree.binary_tree_gui import TreeGUI
 
 class WelcomePageFrame(tk.Frame):
     def __init__(self, master):
@@ -80,7 +81,7 @@ class MainMenuFrame(tk.Frame):
         self.bt_btn = tk.Button(self.canvas, text="BINARY TREE", width=20, height=1, font=("Press Start 2P",18,"bold"),
                                 fg="white", bg="#6e7bb2", activebackground="#1f4bb3",
                                 relief="solid", bd=6,
-                                command=lambda: print("Binary Tree pressed"))
+                                command=self.master.run_bt)
         self.bt_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.bt_btn)
 
         self.bst_btn = tk.Button(self.canvas, text="BINARY SEARCH TREE", width=20, height=1, font=("Press Start 2P",18,"bold"),
@@ -143,10 +144,19 @@ class ProgramGUI(tk.Tk):
         self.current_frame = None
         self.show_frame(WelcomePageFrame)
 
+        self.MainMenuFrame = MainMenuFrame
+
     def show_frame(self, frame_class):
         if self.current_frame is not None:
             self.current_frame.destroy()
         self.current_frame = frame_class(self)
+        self.current_frame.pack(fill="both", expand=True)
+
+    def run_bt(self):
+        if self.current_frame:
+            self.current_frame.destroy()
+
+        self.current_frame = TreeGUI(self)
         self.current_frame.pack(fill="both", expand=True)
 
 

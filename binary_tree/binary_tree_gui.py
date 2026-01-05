@@ -198,5 +198,4 @@ class TreeGUI(tk.Frame):
         self.back_btn.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
 
     def go_back(self):
-        self.destroy()
-        self.master.main_menu()
+        self.master.show_frame(self.master.MainMenuFrame)
