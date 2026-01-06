@@ -1,12 +1,5 @@
-import sys
-from pathlib import Path
 import tkinter as tk
 from tkinter import messagebox
-
-project_root = Path(__file__).resolve().parents[1]
-
-sys.path.insert(0, str(project_root))
-
 from car_parking_lot import Car, ParkingLot
 
 class StackCar(Car):
