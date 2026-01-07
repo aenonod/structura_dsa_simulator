@@ -3,14 +3,14 @@ import tkinter as tk
 # import image processing library
 from PIL import Image, ImageTk
 # import time delay library                                                                                             
-import time                                                                                                                 
+import time                                                                                           
 
 # define class tower of hanoi
-class TowerOfHanoi:
-    def __init__(self, root):  
-        # initialize main window                                                                                            
-        self.root = root
-        self.root.title("Structura") 
+class TowerOfHanoi(tk.Frame):
+    def __init__(self, master):  
+        super().__init__(master)                                                                                          
+        self.master = master
+        self.in_input_screen = True
         # color of disk per size
         self.disk_colors = [
     "#FF595E",  # red
@@ -33,7 +33,7 @@ class TowerOfHanoi:
         self.pegs = [[], [], []]                                                                                            
 
         # create canvas with fixed dimensions
-        self.canvas = tk.Canvas(root, width=800, height=600, highlightthickness=0)
+        self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         # load and display background image
@@ -49,7 +49,7 @@ class TowerOfHanoi:
                                                         
         # initialize move counter
         self.moves = 0                                                                                                     
-        self.move_label = tk.Label(root, text="Moves: 0", font=("Press Start 2P", 12, "bold"), fg="white", bg= "#17357a",padx=10, pady=7, bd = 6, relief = "ridge")                              
+        self.move_label = tk.Label(self.master, text="Moves: 0", font=("Press Start 2P", 12, "bold"), fg="white", bg= "#17357a",padx=10, pady=7, bd = 6, relief = "ridge")                              
         self.move_label.place(relx=0.5, rely=0.02, anchor="n")
 
         # create Start button
@@ -98,7 +98,7 @@ class TowerOfHanoi:
             from_peg, to_peg = self.move_list[self.move_index]
             self.move_disk(from_peg, to_peg)
             self.move_index += 1
-            self.root.after(500, self.animate_moves)
+            self.after(500, self.animate_moves)
         else:
             self.is_running = False
 
@@ -158,6 +158,8 @@ class TowerOfHanoi:
                 # draw pegs and disks
                 self.draw_pegs()
                 self.draw_disks()
+
+                self.in_input_screen = False
             else:
                 # clear input if value is invalid
                 self.disk_entry.delete(0, tk.END)
@@ -232,18 +234,18 @@ class TowerOfHanoi:
             self.move_label.config(text=f"Moves: {self.moves}")
             # redraw disks and update display
             self.draw_disks()
-            self.root.update()  
+            self.update()  
 
     def wait_with_pause(self, seconds):
         interval = 0.05
         elapsed = 0
         while elapsed < seconds:
             if not self.is_paused:
-                self.root.update()
+                self.update()
                 time.sleep(interval)
                 elapsed += interval
             else:
-                self.root.update()
+                self.update()
                 time.sleep(interval)
 
     # recursive Tower of Hanoi algorithm
@@ -278,24 +280,30 @@ class TowerOfHanoi:
         if not self.is_paused:
             self.animate_moves()
 
-    # go back to disk input popup
     def go_back(self):
-        self.is_running = False
-        self.is_paused = False
-        self.move_list = []
-        self.move_index = 0
-        self.moves = 0
-        self.move_label.config(text="Moves: 0")
-        self.pegs = [[], [], []]
-        self.canvas.delete("peg")
-        self.canvas.delete("disk")
-        self.popup_frame.place(relx=0.5,rely=0.47,width=900,height=200,anchor="center")
-        self.start_button.config(state="disabled")
+        # Tower of Hanoi → go back to input
+        if not self.in_input_screen:
+            self.is_running = False
+            self.is_paused = False
+            self.move_list = []
+            self.move_index = 0
+            self.moves = 0
+            self.move_label.config(text="Moves: 0")
 
-# main program
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.attributes("-fullscreen", True)
-    root.bind("<Escape>", lambda e: root.attributes("-fullscreen", False))
-    app = TowerOfHanoi(root)
-    root.mainloop()
+            self.pegs = [[], [], []]
+            self.canvas.delete("peg")
+            self.canvas.delete("disk")
+
+            self.popup_frame.place(
+                relx=0.5,
+                rely=0.47,
+                width=900,
+                height=200,
+                anchor="center")
+            self.start_button.config(state="disabled")
+
+            self.in_input_screen = True
+            return
+
+        # Input → go back to main menu
+        self.master.show_frame(self.master.MainMenuFrame)

@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from binary_tree.binary_tree_gui import TreeGUI
+from recursion.recursion_program import TowerOfHanoi
 
 class WelcomePageFrame(tk.Frame):
     def __init__(self, master):
@@ -93,7 +94,7 @@ class MainMenuFrame(tk.Frame):
         self.recursion_btn = tk.Button(self.canvas, text="RECURSION", width=20, height=1, font=("Press Start 2P",18,"bold"),
                                 fg="white", bg="#6e7bb2", activebackground="#1f4bb3",
                                 relief="solid", bd=6,
-                                command=lambda: print("Recursion pressed"))
+                                command=self.master.run_recursion)
         self.recursion_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.recursion_btn)
 
         self.back_btn = tk.Button(self.canvas, text="BACK", width=15, height=1, font=("Press Start 2P",15,"bold"),
@@ -157,6 +158,13 @@ class ProgramGUI(tk.Tk):
             self.current_frame.destroy()
 
         self.current_frame = TreeGUI(self)
+        self.current_frame.pack(fill="both", expand=True)
+
+    def run_recursion(self):
+        if self.current_frame:
+            self.current_frame.destroy()
+
+        self.current_frame = TowerOfHanoi(self)
         self.current_frame.pack(fill="both", expand=True)
 
 
