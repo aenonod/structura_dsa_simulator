@@ -18,8 +18,29 @@ class TreeGUI(tk.Tk):
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        self.bg_image = tk.PhotoImage(file="assets/background.png")
+        self.bg_image = tk.PhotoImage(file="C:/Users/Renj/Downloads/background.png")
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+
+        self.tree_frame = tk.Frame(self)
+        self.tree_frame.place(x=80, y=180, width=1400, height=700)
+
+        self.tree_frame.grid_rowconfigure(0, weight=1)
+        self.tree_frame.grid_columnconfigure(0, weight=1)
+
+        self.tree_canvas = tk.Canvas(self.tree_frame, bg="#1C4D8D", highlightthickness=0)
+        self.tree_canvas.grid(row=0, column=0, sticky="nsew")
+
+        self.tree_scrollbar_horizontal = tk.Scrollbar(
+        self.tree_frame, orient="horizontal", command=self.tree_canvas.xview)
+        self.tree_scrollbar_horizontal.grid(row=1, column=0, sticky="ew")
+
+        self.tree_canvas.configure(xscrollcommand=self.tree_scrollbar_horizontal.set)
+
+        self.tree_scrollbar_vertical = tk.Scrollbar(
+        self.tree_frame, orient="vertical", command=self.tree_canvas.yview)
+        self.tree_scrollbar_vertical.grid(row=0, column=1, sticky="ns")
+
+        self.tree_canvas.configure(yscrollcommand=self.tree_scrollbar_vertical.set)
 
         self.setup_prog_label()
         self.setup_values_input()
@@ -32,7 +53,7 @@ class TreeGUI(tk.Tk):
         if root is None:
             return Node(value)
         
-        if value < root.value:
+        if value <= root.value:
             root.left = self.insert(root.left,value)
         else:
             root.right = self.insert(root.right,value)
@@ -46,24 +67,25 @@ class TreeGUI(tk.Tk):
         result.append(root.value)
         self.inorder(root.right,result)
 
-    def draw_bst(self,node,x,y,dx):
+    def draw_bst(self, node, x, y, dx, depth=0):
         if not node:
             return
-        circle_radius = 15
-        v_space = 50
+
+        circle_radius = 20
+        v_space = 60  
 
         if node.left:
-            next_dx_left = max(dx * 0.5, 20)
-            self.canvas.create_line(x, y, x - dx, y + v_space, fill="white", width=2)
-            self.draw_bst(node.left, x - dx, y + v_space, next_dx_left)
+            next_dx = max(dx * 0.5, 40)
+            self.tree_canvas.create_line(x, y, x - dx, y + v_space, fill="white", width=2, tags="tree")
+            self.draw_bst(node.left, x - dx, y + v_space, next_dx, depth + 1)
 
         if node.right:
-            next_dx_right = max(dx * 0.5, 20)
-            self.canvas.create_line(x, y, x + dx, y + v_space, fill="white", width=2)
-            self.draw_bst(node.right, x + dx, y + v_space, next_dx_right)
+            next_dx = max(dx * 0.5, 40)
+            self.tree_canvas.create_line(x, y, x + dx, y + v_space, fill="white", width=2, tags="tree")
+            self.draw_bst(node.right, x + dx, y + v_space, next_dx, depth + 1)
         
-        self.canvas.create_oval(x-circle_radius, y-circle_radius, x+circle_radius, y+circle_radius, fill="#cab7d9")
-        self.canvas.create_text(x, y, text=str(node.value), font=("Arial", 12, "bold"))
+        self.tree_canvas.create_oval(x-circle_radius, y-circle_radius, x+circle_radius, y+circle_radius, fill="#cab7d9", tags = "tree")
+        self.tree_canvas.create_text(x, y, text=str(node.value), font=("Arial", 12, "bold"), tags = "tree")
 
     def setup_prog_label(self):
         self.label_frame = Frame(self, bg = "#6e7bb2",
@@ -75,6 +97,22 @@ class TreeGUI(tk.Tk):
                                 fg = "white",
                                 bg="#6e7bb2")
         self.label_text.pack(padx=10, pady=10)
+
+    def display_count(self):
+        raw_count = self.values_input.get()
+        valid_numbers = []
+
+        for count in raw_count.split(","):
+            count = count.strip()
+
+            if count != "":
+                valid_numbers.append(int(count))
+        
+        total_count = len(valid_numbers)
+
+        self.number_count_display.config(state="normal")
+        self.number_count_display.delete(0, END)
+        self.number_count_display.insert(0, total_count)
 
     def setup_values_input(self):
         self.values_frame = tk.Frame(self, bg="#6e7bb2",
@@ -91,6 +129,9 @@ class TreeGUI(tk.Tk):
                                 font=("Montserrat", 15), width=100,
                                 fg="#000000", bg="#FFFFFF")
         self.values_input.grid(row=0, column=1, padx=0.9, sticky="e")
+        self.values_input.bind("<Key>", lambda event: self.error_label.config(text=""))
+        self.values_input.bind("<KeyRelease>", lambda e: self.display_count(), add = "+")
+        self.values_input.bind("<KeyRelease>", self.auto_clear_canvas, add = "+")
 
         self.tip_label = tk.Label(self,
                                 text="", font=("Montserrat", 12),
@@ -102,8 +143,20 @@ class TreeGUI(tk.Tk):
         self.error_label = Label(self, text="", font=("Press Start 2P", 13), fg="red", bg="#6e7bb2")
         self.error_label.place(relx=0.98, rely=0.109, anchor="ne")
 
-        #self.number_count_display = Entry(self, font = ("Press Start 2P", 13), relief = "flat", bg="black")
-        #self.number_count_display.place(relx= 0.886, rely= 0.195, width= 330, anchor = "center")
+        self.number_count_label = Label(self, text=" Number count:", font=("Montserrat",13), width = 17, fg="white", bg="black", anchor ="w")
+        self.number_count_label.place(relx=0.1112, rely=0.15, anchor="ne")
+
+        self.number_count_display = Entry(self, font = ("Montserrat", 13), fg = "white", relief = "flat", bg="black", justify = "left")
+        self.number_count_display.place(relx= 0.09, rely= 0.161, width= 20, anchor = "center")
+
+    def auto_clear_canvas(self, event=None):
+        text = self.values_input.get().strip()
+
+        if text == "":
+            self.tree_canvas.delete("all")
+            self.traversal_label.config(text="Inorder:")
+
+            self.error_label.config(text="")
 
     def confirm_button(self):
         self.tree_btn = tk.Button(self, text="Generate Tree",
@@ -127,6 +180,7 @@ class TreeGUI(tk.Tk):
         raw_number_value = self.values_input.get()
         number_values = []
 
+        
         try:
             self.error_label.config(text="")
 
@@ -150,23 +204,33 @@ class TreeGUI(tk.Tk):
         except:
             self.error_label.config(text="INVALID")
             return
-            
 
         result = []
         self.inorder(root, result)
         self.traversal_label.config(text="Inorder: " + " ".join(map(str, result)))
-        
-        self.canvas.delete("all")
-        self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)
 
-        self.draw_bst(root,780,170,400)
+        self.tree_canvas.delete("all")                                          
+        
+        self.draw_bst(root,700,130,440)
+        
+        self.tree_canvas.update_idletasks()
+        self.tree_canvas.configure(scrollregion=self.tree_canvas.bbox("all"))
+        self.tree_canvas.xview_moveto(0.5)
+
+        bstbox = self.tree_canvas.bbox("tree")
+        if bstbox:
+            x1, y1, x2, y2 = bstbox
+
+            self.tree_canvas.configure(scrollregion=(x1-50, y1-50, x2+50, y2+50))
+
+        self.tree_canvas.yview_moveto(0)
 
     def traversal_frame(self):
         self.traversal_container = tk.Frame(self, bg="#b3d9ff",
                                 bd = 5, relief = "solid")
         self.traversal_container.place(relx=0.007, rely=0.99, width=1350, height=50, anchor="sw")
 
-        self.traversal_label = tk.Label(self.traversal_container, text="Inorder:",
+        self.traversal_label = tk.Label(self.traversal_container, text=" Inorder:",
                                 font=("Montserrat", 15, "bold"),
                                 fg="black",
                                 bg="#b3d9ff",
