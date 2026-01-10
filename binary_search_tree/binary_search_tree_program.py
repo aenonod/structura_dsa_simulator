@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from PIL import Image, ImageTk
 
 class Node:
     def __init__(self,value):
@@ -18,11 +19,12 @@ class TreeGUI(tk.Tk):
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        self.bg_image = tk.PhotoImage(file="C:/Users/Renj/Downloads/background.png")
-        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+        self.orig_bg = Image.open("assets/background.png")
+        self.bg_img = ImageTk.PhotoImage(self.orig_bg)
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img, tags=("bg",))
 
         self.tree_frame = tk.Frame(self)
-        self.tree_frame.place(x=80, y=180, width=1400, height=700)
+        self.tree_frame.place(x=80, y=180, width=1400, height=600)
 
         self.tree_frame.grid_rowconfigure(0, weight=1)
         self.tree_frame.grid_columnconfigure(0, weight=1)
@@ -47,6 +49,23 @@ class TreeGUI(tk.Tk):
         self.confirm_button()
         self.back_button()
         self.traversal_frame()
+
+        self.canvas.bind("<Configure>", self.resize_bg)
+        self.after(100, self.force_redraw)
+
+    def resize_bg(self, event):
+        if event.width < 1 or event.height < 1:
+            return
+        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        self.bg_img = ImageTk.PhotoImage(resized)
+        self.canvas.itemconfig(self.bg_id, image=self.bg_img)
+        self.canvas.coords(self.bg_id, 0, 0)
+
+    def force_redraw(self):
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        if w > 1 and h > 1:
+            self.resize_bg(tk.Event(width=w, height=h))
 
     #for inserting new values in BST (left node= lower number or equal, right node = higher numbers)    
     def insert(self,root,value):
@@ -137,17 +156,17 @@ class TreeGUI(tk.Tk):
                                 text="", font=("Montserrat", 12),
                                 bg="black",
                                 fg="white")
-        self.tip_label.place(relx=0.993, rely=0.152, width=330, anchor="ne")
+        self.tip_label.place(relx=0.992, rely=0.157, width=330, anchor="ne")
         self.tip_label.config(text="Input must be minimum of 10, maximum of 30")
 
         self.error_label = Label(self, text="", font=("Press Start 2P", 13), fg="red", bg="#6e7bb2")
         self.error_label.place(relx=0.98, rely=0.109, anchor="ne")
 
         self.number_count_label = Label(self, text=" Number count:", font=("Montserrat",13), width = 17, fg="white", bg="black", anchor ="w")
-        self.number_count_label.place(relx=0.1112, rely=0.15, anchor="ne")
+        self.number_count_label.place(relx=0.1112, rely=0.157, anchor="ne")
 
         self.number_count_display = Entry(self, font = ("Montserrat", 13), fg = "white", relief = "flat", bg="black", justify = "left")
-        self.number_count_display.place(relx= 0.09, rely= 0.161, width= 20, anchor = "center")
+        self.number_count_display.place(relx= 0.092, rely= 0.173, width= 20, anchor = "center")
 
     def auto_clear_canvas(self, event=None):
         text = self.values_input.get().strip()
