@@ -67,13 +67,13 @@ class TowerOfHanoi(tk.Frame):
         self.create_popup()
 
         # bind window resize event
-        self.canvas.bind("<Configure>", self.resize_bg)
+        self.canvas.bind("<Configure>", lambda e: self.resize_bg(e.width, e.height))
         self.after(100, self.force_redraw)
 
-    def resize_bg(self, event):
-        if event.width < 1 or event.height < 1:
+    def resize_bg(self, width, height):
+        if width < 1 or height < 1:
             return
-        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        resized = self.orig_bg.resize((width, height), Image.LANCZOS)
         self.bg_img = ImageTk.PhotoImage(resized)
         self.canvas.itemconfig(self.bg_id, image=self.bg_img)
         self.canvas.coords(self.bg_id, 0, 0)
@@ -83,7 +83,7 @@ class TowerOfHanoi(tk.Frame):
         box_width = 395
         box_height = 55
 
-        x2 = event.width - 15
+        x2 = width - 15
         y1 = padding
         x1 = x2 - box_width
         y2 = y1 + box_height
@@ -98,7 +98,7 @@ class TowerOfHanoi(tk.Frame):
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
         if w > 1 and h > 1:
-            self.resize_bg(tk.Event(width=w, height=h))
+            self.resize_bg(w, h)
     
     # reset function
     def reset_hanoi(self):

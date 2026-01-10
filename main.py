@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from binary_tree.binary_tree_gui import TreeGUI
+from binary_search_tree.binary_search_tree_program import BinarySearchGUI
 from recursion.recursion_program import TowerOfHanoi
 
 class WelcomePageFrame(tk.Frame):
@@ -33,23 +34,23 @@ class WelcomePageFrame(tk.Frame):
         self.play_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.play_btn)
 
         # Bind resize and force redraw
-        self.canvas.bind("<Configure>", self.resize_bg)
+        self.canvas.bind("<Configure>", lambda e: self.resize_bg(e.width, e.height))
         self.after(100, self.force_redraw)
 
-    def resize_bg(self, event):
-        if event.width < 1 or event.height < 1:
+    def resize_bg(self, width, height):
+        if width < 1 or height < 1:
             return
-        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        resized = self.orig_bg.resize((width, height), Image.LANCZOS)
         self.bg_img = ImageTk.PhotoImage(resized)
         self.canvas.itemconfig(self.bg_id, image=self.bg_img)
         self.canvas.coords(self.bg_id, 0, 0)
-        self.canvas.coords(self.play_btn_id, event.width*0.5, event.height*0.64)
+        self.canvas.coords(self.play_btn_id, width*0.5, height*0.64)
 
     def force_redraw(self):
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
         if w > 1 and h > 1:
-            self.resize_bg(tk.Event(width=w, height=h))
+            self.resize_bg(w, h)
 
 
 class MeetTheDevsFrame(tk.Frame):
@@ -136,7 +137,7 @@ class MainMenuFrame(tk.Frame):
         self.bst_btn = tk.Button(self.canvas, text="BINARY SEARCH TREE", width=20, height=1, font=("Press Start 2P",18,"bold"),
                                 fg="white", bg="#6e7bb2", activebackground="#1f4bb3",
                                 relief="solid", bd=6,
-                                command=lambda: print("Binary Search Tree pressed"))
+                                command=self.master.run_bst)
         self.bst_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.bst_btn)
 
         self.recursion_btn = tk.Button(self.canvas, text="RECURSION", width=20, height=1, font=("Press Start 2P",18,"bold"),
@@ -158,30 +159,30 @@ class MainMenuFrame(tk.Frame):
         self.devs_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.devs_btn)
 
         # Bind resize and force redraw
-        self.canvas.bind("<Configure>", self.resize_bg)
+        self.canvas.bind("<Configure>", lambda e: self.resize_bg(e.width, e.height))
         self.after(100, self.force_redraw)
 
-    def resize_bg(self, event):
-        if event.width < 1 or event.height < 1:
+    def resize_bg(self, width, height):
+        if width < 1 or height < 1:
             return
-        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        resized = self.orig_bg.resize((width, height), Image.LANCZOS)
         self.bg_img = ImageTk.PhotoImage(resized)
         self.canvas.itemconfig(self.bg_id, image=self.bg_img)
         self.canvas.coords(self.bg_id, 0, 0)
         # reposition buttons
-        self.canvas.coords(self.stack_btn_id, event.width * 0.50, event.height * 0.50)
-        self.canvas.coords(self.queue_btn_id, event.width * 0.50, event.height * 0.58)
-        self.canvas.coords(self.bt_btn_id, event.width*0.5, event.height*0.66)
-        self.canvas.coords(self.bst_btn_id, event.width * 0.50, event.height * 0.74)
-        self.canvas.coords(self.recursion_btn_id, event.width * 0.50, event.height * 0.82)
-        self.canvas.coords(self.back_btn_id, event.width*0.15, event.height*0.92)
-        self.canvas.coords(self.devs_btn_id, event.width * 0.85, event.height * 0.92)
+        self.canvas.coords(self.stack_btn_id, width * 0.50, height * 0.50)
+        self.canvas.coords(self.queue_btn_id, width * 0.50, height * 0.58)
+        self.canvas.coords(self.bt_btn_id, width*0.5, height*0.66)
+        self.canvas.coords(self.bst_btn_id, width * 0.50, height * 0.74)
+        self.canvas.coords(self.recursion_btn_id, width * 0.50, height * 0.82)
+        self.canvas.coords(self.back_btn_id, width*0.15, height*0.92)
+        self.canvas.coords(self.devs_btn_id, width * 0.85, height * 0.92)
 
     def force_redraw(self):
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
         if w > 1 and h > 1:
-            self.resize_bg(tk.Event(width=w, height=h))
+            self.resize_bg(w, h)
 
 
 class ProgramGUI(tk.Tk):
@@ -213,6 +214,13 @@ class ProgramGUI(tk.Tk):
             self.current_frame.destroy()
 
         self.current_frame = TreeGUI(self)
+        self.current_frame.pack(fill="both", expand=True)
+
+    def run_bst(self):
+        if self.current_frame:
+            self.current_frame.destroy()
+
+        self.current_frame = BinarySearchGUI(self)
         self.current_frame.pack(fill="both", expand=True)
 
     def run_recursion(self):
