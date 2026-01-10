@@ -52,6 +52,54 @@ class WelcomePageFrame(tk.Frame):
             self.resize_bg(tk.Event(width=w, height=h))
 
 
+class MeetTheDevsFrame(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
+
+        # Canvas
+        self.canvas = tk.Canvas(self, highlightthickness=0, bg="#1b3c8a")
+        self.canvas.pack(fill="both", expand=True)
+
+        # Background
+        self.orig_bg = Image.open("assets/devs_page.png")
+        self.bg_img = ImageTk.PhotoImage(self.orig_bg)
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img)
+
+        # Back button
+        self.back_btn = tk.Button(
+            self.canvas,
+            text="BACK",
+            width=15, height=1,
+            font=("Press Start 2P", 15, "bold"),
+            fg="white",
+            bg="#17357a",
+            activebackground="#1f4bb3",
+            relief="raised",
+            bd=6,
+            command=lambda: self.master.show_frame(MainMenuFrame))
+        self.back_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.back_btn)
+
+        # Bind resize and force redraw
+        self.canvas.bind("<Configure>", self.resize_bg)
+        self.after(100, self.force_redraw)
+
+    def resize_bg(self, event):
+        if event.width < 1 or event.height < 1:
+            return
+        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        self.bg_img = ImageTk.PhotoImage(resized)
+        self.canvas.itemconfig(self.bg_id, image=self.bg_img)
+        self.canvas.coords(self.bg_id, 0, 0)
+        self.canvas.coords(self.back_btn_id, event.width*0.15, event.height*0.92)
+
+    def force_redraw(self):
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        if w > 1 and h > 1:
+            self.resize_bg(tk.Event(width=w, height=h))
+    
+
 class MainMenuFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
@@ -99,14 +147,14 @@ class MainMenuFrame(tk.Frame):
 
         self.back_btn = tk.Button(self.canvas, text="BACK", width=15, height=1, font=("Press Start 2P",15,"bold"),
                                   fg="white", bg="#17357a", activebackground="#1f4bb3",
-                                  relief="solid", bd=6,
+                                  relief="raised", bd=6,
                                   command=lambda: self.master.show_frame(WelcomePageFrame))
         self.back_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.back_btn)
 
         self.devs_btn = tk.Button(self.canvas, text="MEET THE DEVS", width=15, height=1, font=("Press Start 2P",15,"bold"),
                                   fg="white", bg="#17357a", activebackground="#1f4bb3",
-                                  relief="solid", bd=6,
-                                  command=lambda: self.master.show_frame(WelcomePageFrame))
+                                  relief="raised", bd=6,
+                                  command=lambda: self.master.show_frame(MeetTheDevsFrame))
         self.devs_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.devs_btn)
 
         # Bind resize and force redraw
@@ -151,6 +199,13 @@ class ProgramGUI(tk.Tk):
         if self.current_frame is not None:
             self.current_frame.destroy()
         self.current_frame = frame_class(self)
+        self.current_frame.pack(fill="both", expand=True)
+
+    def meet_the_devs(self):
+        if self.current_frame:
+            self.current_frame.destroy()
+
+        self.current_frame = MeetTheDevsFrame(self)
         self.current_frame.pack(fill="both", expand=True)
 
     def run_bt(self):
