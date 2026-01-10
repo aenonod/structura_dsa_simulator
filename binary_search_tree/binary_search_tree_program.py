@@ -3,18 +3,15 @@ from tkinter import *
 from PIL import Image, ImageTk
 
 class Node:
-    def __init__(self,value):
+    def __init__(self, value):
         self.value = value
         self.right = None
         self.left = None
 
-class TreeGUI(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Structura")
-        self.attributes("-fullscreen", True)
-        self.bind("<Escape>", lambda e: self.attributes("-fullscreen", False))
-
+class BinarySearchGUI(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
 
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
@@ -24,7 +21,7 @@ class TreeGUI(tk.Tk):
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img, tags=("bg",))
 
         self.tree_frame = tk.Frame(self)
-        self.tree_frame.place(x=80, y=180, width=1400, height=600)
+        self.tree_frame.place(x=51, y=180, width=1432, height=600)
 
         self.tree_frame.grid_rowconfigure(0, weight=1)
         self.tree_frame.grid_columnconfigure(0, weight=1)
@@ -50,13 +47,13 @@ class TreeGUI(tk.Tk):
         self.back_button()
         self.traversal_frame()
 
-        self.canvas.bind("<Configure>", self.resize_bg)
+        self.canvas.bind("<Configure>", lambda e: self.resize_bg(e.width, e.height))
         self.after(100, self.force_redraw)
 
-    def resize_bg(self, event):
-        if event.width < 1 or event.height < 1:
+    def resize_bg(self, width, height):
+        if width < 1 or height < 1:
             return
-        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        resized = self.orig_bg.resize((width, height), Image.LANCZOS)
         self.bg_img = ImageTk.PhotoImage(resized)
         self.canvas.itemconfig(self.bg_id, image=self.bg_img)
         self.canvas.coords(self.bg_id, 0, 0)
@@ -65,7 +62,7 @@ class TreeGUI(tk.Tk):
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
         if w > 1 and h > 1:
-            self.resize_bg(tk.Event(width=w, height=h))
+            self.resize_bg(w, h)
 
     #for inserting new values in BST (left node= lower number or equal, right node = higher numbers)    
     def insert(self,root,value):
@@ -192,14 +189,16 @@ class TreeGUI(tk.Tk):
                                 fg="white",
                                 bg="#17357a",
                                 padx=10, pady=7)
-        self.back_btn.config(command=lambda: self.main_menu())
+        self.back_btn.config(command=lambda: self.go_back())
         self.back_btn.place(relx=0.994, rely=0.99, width=150, height=50, anchor="se")
+
+    def go_back(self):
+        self.master.show_frame(self.master.MainMenuFrame)
 
     def confirm_input(self):
         raw_number_value = self.values_input.get()
         number_values = []
 
-        
         try:
             self.error_label.config(text="")
 
@@ -214,12 +213,11 @@ class TreeGUI(tk.Tk):
                 number_values.append(int(num))
             if not (10 <= len(number_values) <= 30):
                 raise ValueError("Invalid Count")
-        #9
+
             root = None
             for number in number_values:
                 root = self.insert(root,number)   
        
-
         except:
             self.error_label.config(text="INVALID")
             return
@@ -255,7 +253,3 @@ class TreeGUI(tk.Tk):
                                 bg="#b3d9ff",
                                 justify="left", anchor="w")
         self.traversal_label.pack(padx=2, pady=2, fill="both")
-
-if __name__ == "__main__":
-    app = TreeGUI()
-    app.mainloop()
