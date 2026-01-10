@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from PIL import Image, ImageTk
 from .binary_tree_program import BinaryTree
 
 class TreeGUI(tk.Frame):
@@ -12,8 +13,9 @@ class TreeGUI(tk.Frame):
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        self.bg_image = tk.PhotoImage(file="assets/background.png")
-        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+        self.orig_bg = Image.open("assets/background.png")
+        self.bg_img = ImageTk.PhotoImage(self.orig_bg)
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img, tags=("bg",))
         
         self.setup_prog_label()
         self.setup_height_input()
@@ -42,6 +44,23 @@ class TreeGUI(tk.Frame):
         self.number_count_display.place(relx=0.983, rely=0.198, width=30, height=24, anchor="center")
 
         self.display_count()
+
+        self.canvas.bind("<Configure>", self.resize_bg)
+        self.after(100, self.force_redraw)
+
+    def resize_bg(self, event):
+        if event.width < 1 or event.height < 1:
+            return
+        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        self.bg_img = ImageTk.PhotoImage(resized)
+        self.canvas.itemconfig(self.bg_id, image=self.bg_img)
+        self.canvas.coords(self.bg_id, 0, 0)
+
+    def force_redraw(self):
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        if w > 1 and h > 1:
+            self.resize_bg(tk.Event(width=w, height=h))
 
     def setup_prog_label(self):
         self.label_frame = Frame(self, bg = "#6e7bb2",

@@ -32,20 +32,17 @@ class TowerOfHanoi(tk.Frame):
         self.num_disks = 0                                                                                                  
         self.pegs = [[], [], []]                                                                                            
 
-        # create canvas with fixed dimensions
         self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        # load and display background image
-        self.bg_image = tk.PhotoImage(file="assets/background.png")
-        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image, tags=("bg",))
+        # create canvas with fixed dimensions
+        self.orig_bg = Image.open("assets/background.png")
+        self.bg_img = ImageTk.PhotoImage(self.orig_bg)
+        self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img)
         
         # title Banner
         self.title_bg = self.canvas.create_rectangle(0, 0, 0, 0, fill="#6e7bb2", outline="black", width=8)
         self.title_text = self.canvas.create_text(0, 0, text="Recursion", fill="white", font=("Press Start 2P", 15, "bold"))                   
-
-        # bind window resize event
-        self.canvas.bind("<Configure>", self.on_resize) 
                                                         
         # initialize move counter
         self.moves = 0                                                                                                     
@@ -68,6 +65,40 @@ class TowerOfHanoi(tk.Frame):
 
         # create popup window for disk input
         self.create_popup()
+
+        # bind window resize event
+        self.canvas.bind("<Configure>", self.resize_bg)
+        self.after(100, self.force_redraw)
+
+    def resize_bg(self, event):
+        if event.width < 1 or event.height < 1:
+            return
+        resized = self.orig_bg.resize((event.width, event.height), Image.LANCZOS)
+        self.bg_img = ImageTk.PhotoImage(resized)
+        self.canvas.itemconfig(self.bg_id, image=self.bg_img)
+        self.canvas.coords(self.bg_id, 0, 0)
+
+        # position title at upper-right
+        padding = 12
+        box_width = 395
+        box_height = 55
+
+        x2 = event.width - 15
+        y1 = padding
+        x1 = x2 - box_width
+        y2 = y1 + box_height
+
+        self.canvas.coords(self.title_bg, x1, y1, x2, y2)
+        self.canvas.coords(self.title_text, (x1 + x2) / 2, (y1 + y2) / 2)
+
+        self.canvas.tag_raise(self.title_bg)
+        self.canvas.tag_raise(self.title_text)
+
+    def force_redraw(self):
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        if w > 1 and h > 1:
+            self.resize_bg(tk.Event(width=w, height=h))
     
     # reset function
     def reset_hanoi(self):
@@ -102,30 +133,10 @@ class TowerOfHanoi(tk.Frame):
         else:
             self.is_running = False
 
-    # resize background image when window size changes
-    def on_resize(self, event):                                                                                            
-        self.canvas.coords(self.bg_id, 0, 0)
-
         # redraw pegs and disks if disks are already set
         if self.num_disks > 0:
             self.draw_pegs()
             self.draw_disks()
-
-        # position title at upper-right
-        padding = 12
-        box_width = 395
-        box_height = 55
-
-        x2 = event.width - 15
-        y1 = padding
-        x1 = x2 - box_width
-        y2 = y1 + box_height
-
-        self.canvas.coords(self.title_bg, x1, y1, x2, y2)
-        self.canvas.coords(self.title_text, (x1 + x2) / 2, (y1 + y2) / 2)
-
-        self.canvas.tag_raise(self.title_bg)
-        self.canvas.tag_raise(self.title_text)
 
    # create popup window for disk input
     def create_popup(self):
