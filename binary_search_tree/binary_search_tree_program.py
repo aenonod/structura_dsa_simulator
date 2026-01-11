@@ -21,7 +21,7 @@ class BinarySearchGUI(tk.Frame):
         self.bg_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg_img, tags=("bg",))
 
         self.tree_frame = tk.Frame(self)
-        self.tree_frame.place(x=51, y=180, width=1432, height=600)
+        self.tree_frame.place(relx=0.5, rely=0.55, anchor="center", width=1432, height=600)
 
         self.tree_frame.grid_rowconfigure(0, weight=1)
         self.tree_frame.grid_columnconfigure(0, weight=1)
@@ -83,25 +83,106 @@ class BinarySearchGUI(tk.Frame):
         result.append(root.value)
         self.inorder(root.right,result)
 
-    def draw_bst(self, node, x, y, dx, depth=0):
+    def compute_subtree_width(self, node):
+        if not node:
+            return 1
+        return self.compute_subtree_width(node.left) + self.compute_subtree_width(node.right)
+
+    def assign_positions(self, node, depth, x_min, x_max):
         if not node:
             return
 
-        circle_radius = 20
-        v_space = 60  
+        mid = (x_min + x_max) // 2
+        node.x = mid
+        node.y = depth
 
         if node.left:
-            next_dx = max(dx * 0.5, 40)
-            self.tree_canvas.create_line(x, y, x - dx, y + v_space, fill="white", width=2, tags="tree")
-            self.draw_bst(node.left, x - dx, y + v_space, next_dx, depth + 1)
-
+            w_left = self.compute_subtree_width(node.left)
+            self.assign_positions(node.left, depth + 1,
+                              x_min,
+                              x_min + w_left * 120)
         if node.right:
-            next_dx = max(dx * 0.5, 40)
-            self.tree_canvas.create_line(x, y, x + dx, y + v_space, fill="white", width=2, tags="tree")
-            self.draw_bst(node.right, x + dx, y + v_space, next_dx, depth + 1)
-        
-        self.tree_canvas.create_oval(x-circle_radius, y-circle_radius, x+circle_radius, y+circle_radius, fill="#cab7d9", tags = "tree")
-        self.tree_canvas.create_text(x, y, text=str(node.value), font=("Arial", 12, "bold"), tags = "tree")
+            w_right = self.compute_subtree_width(node.right)
+            self.assign_positions(node.right, depth + 1,
+                              x_max - w_right * 120,
+                              x_max)
+
+
+    def draw_tree_inorder(self, root):
+        self.tree_canvas.delete("all")
+
+        # compute total width based on subtree sizes
+        total_width = self.compute_subtree_width(root) * 120
+
+        # correct call with required parameters
+        self.assign_positions(root, depth=0, x_min=0, x_max=total_width)
+
+        r = 20
+
+        def draw(node):
+            if not node:
+                return
+
+            x = node.x + 100
+            y = node.y * 110 + 80
+
+            # save actual root X position
+            if node == root:
+                self.root_x = x
+
+            # draw left line
+            if node.left:
+                lx = node.left.x + 100
+                ly = node.left.y * 110 + 80
+                self.tree_canvas.create_line(
+                x, y, lx, ly, fill="white", width=2, tags=("tree",)
+            )
+
+            # draw right line
+            if node.right:
+                rx = node.right.x + 100
+                ry = node.right.y * 110 + 80
+                self.tree_canvas.create_line(
+                x, y, rx, ry, fill="white", width=2, tags=("tree",)
+            )
+
+            # draw node
+            self.tree_canvas.create_oval(
+                x - r, y - r, x + r, y + r,
+                fill="#cab7d9",
+                tags=("tree",))
+            
+            self.tree_canvas.create_text(
+            x, y, text=str(node.value),
+            font=("Arial", 12, "bold"),
+            tags=("tree",)
+        )
+
+            draw(node.left)
+            draw(node.right)
+
+        draw(root)
+
+        # update scrollregion
+        self.tree_canvas.update_idletasks()
+        self.tree_canvas.configure(scrollregion=self.tree_canvas.bbox("all"))
+
+        canvas_height = self.tree_canvas.winfo_height()
+        x1, y1, x2, y2 = self.tree_canvas.bbox("all")
+
+        tree_height = y2 - y1
+        if tree_height < canvas_height:
+            offset = (canvas_height - tree_height) / 2 - y1
+            self.tree_canvas.move("all", 0, offset)
+
+        # center root horizontally
+        x1, y1, x2, y2 = self.tree_canvas.bbox("all")
+        canvas_width = self.tree_canvas.winfo_width()
+
+        if canvas_width > 1:
+            tree_width = x2 - x1
+            fraction = (self.root_x - canvas_width/2) / tree_width
+            self.tree_canvas.xview_moveto(max(0, min(1, fraction)))
 
     def setup_prog_label(self):
         self.label_frame = Frame(self, bg = "#6e7bb2",
@@ -228,19 +309,8 @@ class BinarySearchGUI(tk.Frame):
 
         self.tree_canvas.delete("all")                                          
         
-        self.draw_bst(root,700,130,440)
+        self.draw_tree_inorder(root)
         
-        self.tree_canvas.update_idletasks()
-        self.tree_canvas.configure(scrollregion=self.tree_canvas.bbox("all"))
-        self.tree_canvas.xview_moveto(0.5)
-
-        bstbox = self.tree_canvas.bbox("tree")
-        if bstbox:
-            x1, y1, x2, y2 = bstbox
-
-            self.tree_canvas.configure(scrollregion=(x1-50, y1-50, x2+50, y2+50))
-
-        self.tree_canvas.yview_moveto(0)
 
     def traversal_frame(self):
         self.traversal_container = tk.Frame(self, bg="#b3d9ff",
