@@ -7,7 +7,7 @@ class StackCar(Car):
         super().__init__(car, canvas, x, stop_y)
 
     def move_out(self, callback=None):
-        if self.y > -60:
+        if self.y > -48:
             self.canvas.move(self.id, 0, -self.speed)
             self.y -= self.speed
             self.canvas.after(10, lambda: self.move_out(callback))
@@ -26,21 +26,21 @@ class StackParkingLot(ParkingLot):
         self.create_stack_parking_lot_lines()
 
     def create_stack_parking_lot_lines(self):
-        cx = 200
-        top = 190
-        bottom = 620
+        cx = 160
+        top = 152
+        bottom = 496
 
-        gap = 80
+        gap = 64
 
         x_left = cx - gap // 2
         x_right = cx + gap // 2
 
-        self.parking_lot.create_line(x_left, top, x_left, bottom, fill="#ffffff", width=10)
-        self.parking_lot.create_line(x_right, top, x_right, bottom, fill="#ffffff", width=10)
+        self.parking_lot.create_line(x_left, top, x_left, bottom, fill="#ffffff", width=8)
+        self.parking_lot.create_line(x_right, top, x_right, bottom, fill="#ffffff", width=8)
 
-        y = 620
+        y = 496
 
-        line_length = 45
+        line_length = 36
 
         x1_left = cx - line_length
         x2_left = cx
@@ -48,8 +48,8 @@ class StackParkingLot(ParkingLot):
         x1_right = cx
         x2_right = cx + line_length
 
-        self.parking_lot.create_line(x1_left, y, x2_left, y, fill="#ffffff", width=10)
-        self.parking_lot.create_line(x1_right, y, x2_right, y, fill="#ffffff", width=10)
+        self.parking_lot.create_line(x1_left, y, x2_left, y, fill="#ffffff", width=8)
+        self.parking_lot.create_line(x1_right, y, x2_right, y, fill="#ffffff", width=8)
 
     def clear_list(self):
         self.stack.clear()
@@ -81,9 +81,9 @@ class StackParkingLot(ParkingLot):
 
     def spawn_car(self, car, is_refill=False):
         current_index = len(self.stack)
-        target_y = 560 - (current_index * 100)
+        target_y = 448 - (current_index * 80)
 
-        new_car = StackCar(car, self.parking_lot, x=200, stop_y=target_y)
+        new_car = StackCar(car, self.parking_lot, x=160, stop_y=target_y)
         self.stack.append(car)
         self.car_map[car] = new_car
 
@@ -94,7 +94,7 @@ class StackParkingLot(ParkingLot):
             next_step = self.finish_animation
 
         def on_parked_wrapper():
-            text_id = self.parking_lot.create_text(80, target_y, text=str(current_index), font=(self.font, 20), fill="#000000")
+            text_id = self.parking_lot.create_text(64, target_y, text=str(current_index), font=(self.font, 16), fill="#000000")
             self.index_ids[car] = text_id
 
             next_step()
