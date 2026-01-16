@@ -19,7 +19,7 @@ class QueueCar(Car):
                 callback()
 
     def move_out(self, callback=None):
-        if self.y < 900:
+        if self.y < 720:
             self.canvas.move(self.id, 0, self.speed)
             self.y += self.speed
             self.canvas.after(10, lambda: self.move_out(callback))
@@ -38,17 +38,17 @@ class QueueParkingLot(ParkingLot):
         self.create_queue_parking_lot_lines()
 
     def create_queue_parking_lot_lines(self):
-        cx = 200
-        top = 190
-        bottom = 620
+        cx = 160
+        top = 152
+        bottom = 496
 
-        gap = 80
+        gap = 64
 
         x_left = cx - gap // 2
         x_right = cx + gap // 2
 
-        self.parking_lot.create_line(x_left, top, x_left, bottom, fill="#ffffff", width=10)
-        self.parking_lot.create_line(x_right, top, x_right, bottom, fill="#ffffff", width=10)
+        self.parking_lot.create_line(x_left, top, x_left, bottom, fill="#ffffff", width=8)
+        self.parking_lot.create_line(x_right, top, x_right, bottom, fill="#ffffff", width=8)
 
     def clear_list(self):
         self.queue.clear()
@@ -76,16 +76,16 @@ class QueueParkingLot(ParkingLot):
         self.text_box.delete(0, tk.END)
 
     def spawn_car(self, car, is_refill=False, on_complete=None):
-        target_y = 560 - (len(self.queue) * 100)
+        target_y = 448 - (len(self.queue) * 80)
 
-        new_car = QueueCar(car, self.parking_lot, x=200, stop_y=target_y)
+        new_car = QueueCar(car, self.parking_lot, x=160, stop_y=target_y)
         self.queue.append(car)
         self.car_map[car] = new_car
 
         def after_park():
             try:
                 idx = self.queue.index(car)
-                text_id = self.parking_lot.create_text(80, target_y, text=str(idx), font=(self.font, 20), fill="#000000")
+                text_id = self.parking_lot.create_text(64, target_y, text=str(idx), font=(self.font, 16), fill="#000000")
                 self.index_ids[car] = text_id
             except ValueError:
                 pass
@@ -187,8 +187,8 @@ class QueueParkingLot(ParkingLot):
 
             if cars_moving_count <= 0:
                 for i, car in enumerate(self.queue):
-                    target_y = 560 - (i * 100)
-                    text_id = self.parking_lot.create_text(80, target_y, text=str(i), font=(self.font, 20),
+                    target_y = 448 - (i * 80)
+                    text_id = self.parking_lot.create_text(64, target_y, text=str(i), font=(self.font, 16),
                                                            fill="#000000")
                     self.index_ids[car] = text_id
 
@@ -196,7 +196,7 @@ class QueueParkingLot(ParkingLot):
 
         for i, car in enumerate(self.queue):
             car_obj = self.car_map[car]
-            correct_y = 560 - (i * 100)
+            correct_y = 448 - (i * 80)
             car_obj.shift_position(correct_y, callback=check_all_done)
 
     def repark_blocker_cars(self, blocker_car, target_car):
