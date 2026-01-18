@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-from car_parking_lot import Car, ParkingLot
+from PIL import Image, ImageTk
+from .car_parking_lot import Car, ParkingLot
 
 class StackCar(Car):
     def __init__(self, car, canvas, x, stop_y):
@@ -15,14 +16,15 @@ class StackCar(Car):
             if callback:
                 callback()
 
-class StackParkingLot(ParkingLot):
-    def __init__(self, root):
-        super().__init__(root)
+class StackParkingLot(tk.Frame, ParkingLot):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+        ParkingLot.__init__(self, self, master)
 
         self.stack = []
         self.temporary_stack = []
 
-        self.setup_ui("Stack", self.push, self.pop)
+        self.setup_ui("Stack", self.push, self.pop, self.go_back)
         self.create_stack_parking_lot_lines()
 
     def create_stack_parking_lot_lines(self):

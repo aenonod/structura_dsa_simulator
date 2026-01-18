@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from stack.car_parking_lot_stack import StackParkingLot
 from queue.car_parking_lot_queue import QueueParkingLot
 from binary_tree.binary_tree_gui import TreeGUI
 from binary_search_tree.binary_search_tree_program import BinarySearchGUI
@@ -120,7 +121,7 @@ class MainMenuFrame(tk.Frame):
         self.stack_btn = tk.Button(self.canvas, text="STACK", width=20, height=1, font=("Press Start 2P", 18, "bold"),
                                 fg="white", bg="#6e7bb2", activebackground="#1f4bb3",
                                 relief="solid", bd=6,
-                                command=lambda: print("Stack pressed"))
+                                command=self.master.run_stack)
         self.stack_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.stack_btn)
 
         self.queue_btn = tk.Button(self.canvas, text="QUEUE", width=20, height=1, font=("Press Start 2P", 18, "bold"),
@@ -201,6 +202,13 @@ class ProgramGUI(tk.Tk):
         if self.current_frame is not None:
             self.current_frame.destroy()
         self.current_frame = frame_class(self)
+        self.current_frame.pack(fill="both", expand=True)
+
+    def run_stack(self):
+        if self.current_frame:
+            self.current_frame.destroy()
+
+        self.current_frame = StackParkingLot(self)
         self.current_frame.pack(fill="both", expand=True)
 
     def run_queue(self):
