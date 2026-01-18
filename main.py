@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from queue.car_parking_lot_queue import QueueParkingLot
 from binary_tree.binary_tree_gui import TreeGUI
 from binary_search_tree.binary_search_tree_program import BinarySearchGUI
 from recursion.recursion_program import TowerOfHanoi
@@ -125,7 +126,7 @@ class MainMenuFrame(tk.Frame):
         self.queue_btn = tk.Button(self.canvas, text="QUEUE", width=20, height=1, font=("Press Start 2P", 18, "bold"),
                                 fg="white", bg="#6e7bb2", activebackground="#1f4bb3",
                                 relief="solid", bd=6,
-                                command=lambda: print("Queue pressed"))
+                                command=self.master.run_queue)
         self.queue_btn_id = self.canvas.create_window(0, 0, anchor="center", window=self.queue_btn)
         
         self.bt_btn = tk.Button(self.canvas, text="BINARY TREE", width=20, height=1, font=("Press Start 2P",18,"bold"),
@@ -202,11 +203,11 @@ class ProgramGUI(tk.Tk):
         self.current_frame = frame_class(self)
         self.current_frame.pack(fill="both", expand=True)
 
-    def meet_the_devs(self):
+    def run_queue(self):
         if self.current_frame:
             self.current_frame.destroy()
 
-        self.current_frame = MeetTheDevsFrame(self)
+        self.current_frame = QueueParkingLot(self)
         self.current_frame.pack(fill="both", expand=True)
 
     def run_bt(self):
