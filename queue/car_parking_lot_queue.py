@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-from car_parking_lot import Car, ParkingLot
+from PIL import Image, ImageTk
+from .car_parking_lot import Car, ParkingLot
 
 class QueueCar(Car):
     def __init__(self, car, canvas, x, stop_y):
@@ -28,13 +29,14 @@ class QueueCar(Car):
                 callback()
 
 
-class QueueParkingLot(ParkingLot):
-    def __init__(self, root):
-        super().__init__(root)
+class QueueParkingLot(tk.Frame, ParkingLot):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+        ParkingLot.__init__(self, self, master)
 
         self.queue = []
 
-        self.setup_ui("Queue", self.enqueue, self.dequeue)
+        self.setup_ui("Queue", self.enqueue, self.dequeue, self.go_back)
         self.create_queue_parking_lot_lines()
 
     def create_queue_parking_lot_lines(self):
