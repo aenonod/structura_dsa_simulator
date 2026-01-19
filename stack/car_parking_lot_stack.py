@@ -60,7 +60,7 @@ class StackParkingLot(ParkingLot):
         car = self.text_box.get().upper()
         if not car: return
         if len(self.stack) == 4:
-            messagebox.showerror("Error", "Parking Garage is full!")
+            messagebox.showerror("Error", "Parking Lot is full!")
             return
         if car in self.stack:
             messagebox.showerror("Error", "Car already parked!")
