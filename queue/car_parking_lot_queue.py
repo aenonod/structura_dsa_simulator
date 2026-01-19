@@ -107,6 +107,9 @@ class QueueParkingLot(tk.Frame, ParkingLot):
 
         car = self.text_box.get().upper()
         if not car: return
+        if len(self.queue) == 0:
+            messagebox.showerror("Error", "Parking Lot is empty!")
+            return
         if car not in self.queue:
             messagebox.showerror("Error", "Car not parked yet!")
             return
