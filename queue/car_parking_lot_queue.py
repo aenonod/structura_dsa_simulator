@@ -58,10 +58,10 @@ class QueueParkingLot(ParkingLot):
         car = self.text_box.get().upper()
         if not car: return
         if len(self.queue) == 4:
-            messagebox.showwarning("Error", "Parking Garage is full!")
+            messagebox.showerror("Error", "Parking Garage is full!")
             return
         if car in self.queue:
-            messagebox.showwarning("Error", "Car already parked!")
+            messagebox.showerror("Error", "Car already parked!")
             return
 
         if car not in self.cars:
