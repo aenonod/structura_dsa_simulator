@@ -106,6 +106,9 @@ class StackParkingLot(ParkingLot):
 
         car = self.text_box.get().upper()
         if not car: return
+        if len(self.stack) == 0:
+            messagebox.showerror("Error", "Parking Lot is empty!")
+            return
         if car not in self.stack:
             messagebox.showerror("Error", "Car not parked yet!")
             return
