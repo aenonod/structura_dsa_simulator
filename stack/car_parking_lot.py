@@ -74,7 +74,7 @@ class ParkingLot(tk.Frame):
 
     def setup_background(self):
 
-        self.canvas = tk.Canvas(self.root)
+        self.canvas = tk.Canvas(self.root, highlightthickness=0)
         self.canvas.place(x=0, y=0, relwidth=1, relheight=1)
 
         try:
@@ -102,7 +102,7 @@ class ParkingLot(tk.Frame):
 
     def setup_parking_lot(self):
 
-        self.parking_lot = tk.Canvas(self.root, width=320, height=648, bg="#6e7bb2", bd=8, relief="solid")
+        self.parking_lot = tk.Canvas(self.root, width=320, height=648, bg="#6e7bb2", bd=8, relief="solid", highlightthickness=0)
         self.parking_lot.place(anchor="center", x=240, y=440)
 
     def setup_ui(self, title, park, unpark, back_command):
