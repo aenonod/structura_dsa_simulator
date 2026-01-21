@@ -31,7 +31,7 @@ class QueueCar(Car):
 
 class QueueParkingLot(ParkingLot):
     def __init__(self, master):
-        super().__init__(self, master)
+        super().__init__(master)
 
         self.queue = []
 

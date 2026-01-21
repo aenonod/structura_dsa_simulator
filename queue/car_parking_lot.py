@@ -48,9 +48,8 @@ class Car:
                 callback()
 
 class ParkingLot(tk.Frame):
-    def __init__(self, root, master):
+    def __init__(self, master):
         super().__init__(master)
-        self.root = root
         self.master = master
 
         try:
@@ -73,7 +72,7 @@ class ParkingLot(tk.Frame):
 
     def setup_background(self):
 
-        self.canvas = tk.Canvas(self.root, highlightthickness=0)
+        self.canvas = tk.Canvas(self, highlightthickness=0)
         self.canvas.place(x=0, y=0, relwidth=1, relheight=1)
 
         try:
@@ -89,11 +88,11 @@ class ParkingLot(tk.Frame):
                 self.canvas.itemconfig(self.background_id, image=self.background)
                 self.canvas.coords(self.background_id, 0, 0)
         except:
-            self.root.configure(bg="#808080")
+            self.canvas.configure(bg="#808080")
 
         self.canvas.bind("<Configure>", lambda e: resize_background(e.width, e.height))
 
-        information_frame = tk.Frame(self.root, bg="#000000", bd=8, relief="solid")
+        information_frame = tk.Frame(self.canvas, bg="#000000", bd=8, relief="solid")
         information_frame.place(anchor="center", x=240, y=60, width=320, height=80)
         tk.Label(information_frame, text="Parking Lot", font=(self.font, 16), fg="#ffffff", bg="#000000").place(anchor="center", relx=0.5, rely=0.25)
         self.status_label = tk.Label(information_frame, text="Ready", fg="#6e7bb2", bg="#000000", font=(self.font, 8))
@@ -101,29 +100,29 @@ class ParkingLot(tk.Frame):
 
     def setup_parking_lot(self):
 
-        self.parking_lot = tk.Canvas(self.root, width=320, height=648, bg="#6e7bb2", bd=8, relief="solid", highlightthickness=0)
+        self.parking_lot = tk.Canvas(self.canvas, width=320, height=648, bg="#6e7bb2", bd=8, relief="solid", highlightthickness=0)
         self.parking_lot.place(anchor="center", x=240, y=440)
 
     def setup_ui(self, title, park, unpark, back_command):
 
-        title_frame = tk.Frame(self.root, bg="#6e7bb2", bd=8, relief="solid")
+        title_frame = tk.Frame(self.canvas, bg="#6e7bb2", bd=8, relief="solid")
         title_frame.place(anchor="ne", relx=0.993, rely=0.01, width=400, height=60)
 
         tk.Label(title_frame, text=title, font=(self.font, 16), bg="#6e7bb2", fg="#ffffff").place(anchor="center", relx=0.5, rely=0.5)
 
-        control_frame = tk.Frame(self.root, bg="#6e7bb2", bd=8, relief="solid")
+        control_frame = tk.Frame(self.canvas, bg="#6e7bb2", bd=8, relief="solid")
         control_frame.place(anchor="center", x=768, y=632, width=480, height=240)
 
         tk.Label(control_frame, text="Enter Car:", font=(self.font, 16), bg="#6e7bb2", fg="#000000").place(anchor="center", relx=0.5, y=24)
 
-        vcmd = (self.root.register(self.validate_input), "%P")
+        vcmd = (self.canvas.register(self.validate_input), "%P")
         self.text_box = tk.Entry(control_frame, validate="key", validatecommand=vcmd, font=(self.font, 16), width=1, bd=8, relief="solid")
         self.text_box.place(anchor="center", relx=0.5, y=72)
 
-        tk.Button(self.root, text="Back", bg="#17357A", fg="#ffffff", font=(self.font, 15, "bold"), bd=8,command=self.go_back).place(anchor="se", relx=0.994, rely=0.99, width=150, height=50)
+        tk.Button(self.canvas, text="Back", bg="#17357A", fg="#ffffff", font=(self.font, 15, "bold"), bd=8, command=self.go_back).place(anchor="se", relx=0.994, rely=0.99, width=150, height=50)
         tk.Button(control_frame, text="Park", bg="#17357A", fg="#ffffff", font=(self.font, 16), bd=8, relief="solid", command=park).place(anchor="center", relx=0.5, y=124, relwidth=0.4, height=50.4)
         tk.Button(control_frame, text="Unpark", bg="#17357A", fg="#ffffff", font=(self.font, 16), bd=8, relief="solid", command=unpark).place(anchor="center", relx=0.5, y=184, relwidth=0.4, height=50.4)
-        tk.Button(self.root, text="Reset", bg="#17357A", fg="#ffffff", font=(self.font, 16), bd=8, relief="solid", command=self.reset).place(anchor="center", x=768, y=312, width=144, height=50.4)
+        tk.Button(self.canvas, text="Reset", bg="#17357A", fg="#ffffff", font=(self.font, 16), bd=8, relief="solid", command=self.reset).place(anchor="center", x=768, y=312, width=144, height=50.4)
 
     def validate_input(self, P):
         if len(P) <= 1:
@@ -160,7 +159,7 @@ class ParkingLot(tk.Frame):
 
     def setup_table(self):
 
-        border_frame = tk.Frame(self.root, bd=8, relief="solid")
+        border_frame = tk.Frame(self.canvas, bd=8, relief="solid")
         border_frame.place(anchor="center", x=768, y=216, width=547, height=126)
 
         style = ttk.Style()
