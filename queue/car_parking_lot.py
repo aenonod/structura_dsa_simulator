@@ -47,8 +47,9 @@ class Car:
             if callback:
                 callback()
 
-class ParkingLot:
+class ParkingLot(tk.Frame):
     def __init__(self, root, master):
+        super().__init__(master)
         self.root = root
         self.master = master
 

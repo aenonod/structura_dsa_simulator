@@ -29,10 +29,9 @@ class QueueCar(Car):
                 callback()
 
 
-class QueueParkingLot(tk.Frame, ParkingLot):
+class QueueParkingLot(ParkingLot):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        ParkingLot.__init__(self, self, master)
+        super().__init__(self, master)
 
         self.queue = []
 
