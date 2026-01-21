@@ -50,6 +50,7 @@ class Car:
 class ParkingLot(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
+
         self.master = master
 
         try:
