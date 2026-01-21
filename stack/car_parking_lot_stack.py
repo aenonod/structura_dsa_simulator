@@ -16,10 +16,9 @@ class StackCar(Car):
             if callback:
                 callback()
 
-class StackParkingLot(tk.Frame, ParkingLot):
+class StackParkingLot(ParkingLot):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
-        ParkingLot.__init__(self, self, master)
+        super().__init__(self, master)
 
         self.stack = []
         self.temporary_stack = []
