@@ -80,8 +80,18 @@ class ParkingLot(tk.Frame):
             self.original_background = Image.open("assets/background.png")
             self.background = ImageTk.PhotoImage(self.original_background)
             self.background_id = self.canvas.create_image(0, 0, anchor="nw", image=self.background)
+
+            def resize_background(width, height):
+                if width < 1 or height < 1:
+                    return
+                resized_background = self.original_background.resize((width, height), Image.LANCZOS)
+                self.background = ImageTk.PhotoImage(resized_background)
+                self.canvas.itemconfig(self.background_id, image=self.background)
+                self.canvas.coords(self.background_id, 0, 0)
         except:
             self.root.configure(bg="#808080")
+
+        self.canvas.bind("<Configure>", lambda e: resize_background(e.width, e.height))
 
         information_frame = tk.Frame(self.root, bg="#000000", bd=8, relief="solid")
         information_frame.place(anchor="center", x=240, y=60, width=320, height=80)
