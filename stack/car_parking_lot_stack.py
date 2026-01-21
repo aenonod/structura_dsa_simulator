@@ -18,7 +18,7 @@ class StackCar(Car):
 
 class StackParkingLot(ParkingLot):
     def __init__(self, master):
-        super().__init__(self, master)
+        super().__init__(master)
 
         self.stack = []
         self.temporary_stack = []
