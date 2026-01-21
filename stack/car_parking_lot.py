@@ -74,11 +74,13 @@ class ParkingLot(tk.Frame):
 
     def setup_background(self):
 
+        self.canvas = tk.Canvas(self.root)
+        self.canvas.place(x=0, y=0, relwidth=1, relheight=1)
+
         try:
-            background_image = tk.PhotoImage(file="assets/background.png")
-            background_label = tk.Label(self.root, image=background_image)
-            background_label.image = background_image
-            background_label.place(x=0, y=0)
+            self.original_background = Image.open("assets/background.png")
+            self.background = ImageTk.PhotoImage(self.original_background)
+            self.background_id = self.canvas.create_image(0, 0, anchor="nw", image=self.background)
         except:
             self.root.configure(bg="#808080")
 
