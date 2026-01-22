@@ -116,9 +116,18 @@ class ParkingLot(tk.Frame):
 
         tk.Label(control_frame, text="Enter Car:", font=(self.font, 16), bg="#6e7bb2", fg="#000000").place(anchor="center", relx=0.5, y=24)
 
+        text_variable = tk.StringVar()
+
         vcmd = (self.canvas.register(self.validate_input), "%P")
-        self.text_box = tk.Entry(control_frame, validate="key", validatecommand=vcmd, font=(self.font, 16), width=1, bd=8, relief="solid")
+        self.text_box = tk.Entry(control_frame, validate="key", validatecommand=vcmd, textvariable=text_variable,
+                                 font=(self.font, 16), width=1, bd=8, relief="solid")
         self.text_box.place(anchor="center", relx=0.5, y=72)
+
+        def to_uppercase(*args):
+            value = text_variable.get()
+            text_variable.set(value.upper())
+
+        text_variable.trace_add("write", to_uppercase)
 
         tk.Button(self.canvas, text="Back", bg="#17357A", fg="#ffffff", font=(self.font, 15, "bold"), bd=8, command=self.go_back).place(anchor="se", relx=0.994, rely=0.99, width=150, height=50)
         tk.Button(control_frame, text="Park", bg="#17357A", fg="#ffffff", font=(self.font, 16), bd=8, relief="solid", command=park).place(anchor="center", relx=0.5, y=124, relwidth=0.4, height=50.4)
